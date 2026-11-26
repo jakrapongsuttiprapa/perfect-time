@@ -634,6 +634,31 @@ body.lowfx #floaters{display:none}
 .stat b{font-size:34px;background:linear-gradient(180deg,#fff,#b9a8ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(124,92,255,.6))}
 .tbl th{background:linear-gradient(180deg,#221a55,#16113a)}
 .set{background:linear-gradient(160deg,rgba(124,92,255,.14),rgba(255,255,255,.03))}
+/* mission grid: max 3 per row, reserve room for the icon so long titles never overlap it */
+.mgrid{grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr))}
+@media(min-width:1000px){.mgrid{grid-template-columns:repeat(3,1fr)}}
+.mcard{padding-top:96px;min-height:270px}
+
+/* ================= "LITE" mode: tablets/phones — keeps the look, drops continuous GPU-heavy work ================= */
+body.lite{background:radial-gradient(ellipse at 15% -5%,rgba(124,92,255,.45),transparent 45%),radial-gradient(ellipse at 95% 25%,rgba(255,79,216,.32),transparent 45%),radial-gradient(ellipse at 40% 110%,rgba(34,211,238,.28),transparent 50%),var(--bg);background-attachment:fixed}
+body.lite .blobs,body.lite #floaters,body.lite .aurora,body.lite .beams,body.lite .glyphs,body.lite .orbit,body.lite .clock-halo,body.lite .qcard .scanline,body.lite .gold-dust,body.lite .exam-card .sweep,body.lite #cursorGlow{display:none!important}
+body.lite .grid-floor{animation:none;opacity:.3}
+body.lite *{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.lite .glass{background:linear-gradient(160deg,#1d1748,#110d30)}
+body.lite .hero::before{background:radial-gradient(ellipse at 50% 0%,rgba(124,92,255,.45),transparent 60%),linear-gradient(180deg,rgba(7,6,26,.1),rgba(7,6,26,.6))}
+/* stop every infinite repaint-driven animation; keep static versions of the same glow */
+body.lite .btn,body.lite .btn::after,body.lite .grad-text,body.lite .topic-head h2::after,body.lite #examBtn,body.lite .cls-btn::before,body.lite .mcard .mborder::before,
+body.lite .qcard::before,body.lite .exam-card::after,body.lite .name-btn .no::before,body.lite .result .rays,body.lite .mcard .ico,body.lite .cls-btn .planet,
+body.lite .exam-card .trophy,body.lite .fb::after,body.lite .clock .r1,body.lite .clock .r2,body.lite .clock .hand,body.lite .clock .hand2,body.lite .hero.hud > .hc,body.lite .marquee span{animation:none!important}
+body.lite .marquee span{padding-left:0;white-space:normal;display:block;text-align:center;padding:0 14px}
+body.lite .mcard .mborder::before{opacity:.75}
+body.lite .cls-btn::before{opacity:.8}
+body.lite .btn::after{display:none}
+body.lite h1.title .ch{animation:none!important;background-position:calc(var(--i)*40%) 0;filter:drop-shadow(0 3px 0 rgba(124,92,255,.85)) drop-shadow(0 0 14px rgba(255,79,216,.4))}
+body.lite .modal,body.lite .warn-modal .modal{animation:mIn .35s cubic-bezier(.2,.9,.3,1.2)!important}
+body.lite .mcard:hover .holo{opacity:0}
+body.lite .bigring{filter:none}
+body.lite #examBtn{box-shadow:0 0 0 6px rgba(255,209,102,.15),0 10px 40px -6px rgba(255,209,102,.85)}
 
 </style>
 </head>
@@ -837,6 +862,144 @@ BANK.EXAM = [
  {t:'mc',lv:3,q:"Choose the best sentence for this situation: Your friend shows you a perfect drawing he finished a minute ago.",o:["\"Wow! You've drawn a masterpiece!\"","\"Wow! You've been drawing a masterpiece!\"","\"Wow! You draw a masterpiece!\"","\"Wow! You were drawing a masterpiece!\""],a:0,ex:"ชมผลงานที่เสร็จแล้ว → PPS"}
 ];
 
+/* ===== NEW MISSIONS (Topic B) ===== */
+MISSIONS.push(
+  {id:'B4', topic:'B', icon:'⚡', title:'Just · Already · Yet · Been/Gone', th:'คำสำคัญ just/already/yet และ been vs gone', color:'#facc15'},
+  {id:'B5', topic:'B', icon:'📖', title:'Story Time', th:'เล่าเรื่อง: ผสม Present Perfect กับ Past Simple', color:'#a78bfa'},
+  {id:'B6', topic:'B', icon:'🏆', title:'TGAT Challenge', th:'โจทย์ยากแนว TGAT: เขียนประโยคใหม่ + จับผิด', color:'#fb7185'}
+);
+
+BANK.B4 = [
+ {t:'order',lv:1,w:["I","have","just","finished","my","homework"],end:".",ex:"just วางระหว่าง have กับ V3"},
+ {t:'order',lv:1,w:["Have","you","finished","the","project","yet"],end:"?",ex:"yet ในคำถามวางท้ายประโยค"},
+ {t:'mc',lv:1,q:"The bus ___. We can get on now.",o:["has just arrived","just arrives","has just been arriving","had just arrive"],a:0,ex:"just = เพิ่งเกิดขึ้นและส่งผลถึงตอนนี้ → has just arrived"},
+ {t:'mc',lv:1,q:"I haven't seen the new film ___. Is it good?",o:["yet","already","just","ago"],a:0,ex:"ประโยคปฏิเสธ + ยังไม่ได้ทำ → yet (วางท้ายประโยค)"},
+ {t:'mc',lv:2,q:"You're too late! The train has ___ left.",o:["already","yet","ago","still"],a:0,ex:"already = แล้ว (เร็วกว่าที่คิด) ใช้ในประโยคบอกเล่า วางหน้า V3"},
+ {t:'bank',lv:2,q:"Mali has ___ to London three times, so she knows the city well.",o:["been","gone","went","go"],a:["been"],ex:"has been to = เคยไปและกลับมาแล้ว (ประสบการณ์)"},
+ {t:'bank',lv:2,q:"Where's Dad? — He's ___ to the market. He'll be back at noon.",o:["gone","been","went","go"],a:["gone"],ex:"has gone to = ไปแล้วยังไม่กลับ (ตอนนี้อยู่ที่นั่น)"},
+ {t:'spot',lv:2,c:["I","haven't","already","finished","my essay."],a:2,fix:"yet (I haven't finished my essay yet.)",ex:"ประโยคปฏิเสธใช้ yet ไม่ใช้ already"},
+ {t:'spot',lv:2,c:["They","have went","to Japan","twice."],a:1,fix:"have been",ex:"have + V3 → been (ไม่ใช่ went ซึ่งเป็น V2) และ twice = ประสบการณ์ → have been to"},
+ {t:'type',lv:2,q:"Ploy isn't here. She ___ (go) home.",a:["has gone","'s gone"],ex:"ไปแล้วยังไม่กลับ → has gone"},
+ {t:'type',lv:1,q:"No, I haven't finished my report ___.",a:["yet"],ex:"ปฏิเสธ + ยังไม่ → yet"},
+ {t:'dlg',lv:2,d:[["A","Let's eat at that new café!"],["B","Sorry, I ___ lunch. I'm full."]],o:["have just had","just have","have just been having","had just have"],a:0,ex:"เพิ่งกินเสร็จและยังอิ่มอยู่ → have just had"},
+ {t:'dlg',lv:3,d:[["A","Is Ton back from Chiang Mai?"],["B","Yes, he ___ there for a week. He came back yesterday."]],o:["was","has been","has gone","goes"],a:0,ex:"ทริปจบไปแล้ว (กลับมาเมื่อวาน) → Past Simple: was there for a week"},
+ {t:'sort',lv:3,q:"Which word fits the blank?",bins:["already / just","yet"],it:[["Have you done it ___?",1],["I've ___ seen that movie. Let's watch another one.",0],["She hasn't called me ___.",1],["We've ___ arrived. Give us a minute!",0],["Has the parcel arrived ___?",1],["He's ___ finished. He was so fast!",0]],ex:"already/just → ประโยคบอกเล่า วางหน้า V3 • yet → คำถามและปฏิเสธ วางท้ายประโยค"},
+ {t:'tl',lv:1,tl:'dot-result',lab:'just now → result now',q:"Which sentence matches the timeline?",o:["I've just broken my glasses.","I broke my glasses last year.","I was breaking my glasses.","I'll break my glasses."],a:0,ex:"เพิ่งเกิด + ผลยังอยู่ตอนนี้ → have just + V3"}
+];
+
+BANK.B5 = [
+ {t:'mc',lv:2,q:"Nok has worked at the hospital since 2019. Before that, she ___ at a clinic in Phitsanulok.",o:["worked","has worked","has been working","works"],a:0,ex:"Before that = ช่วงเวลาก่อนหน้าที่จบไปแล้ว → Past Simple"},
+ {t:'mc',lv:2,q:"I've lost 5 kg this year! I ___ jogging in January.",o:["started","have started","have been starting","start"],a:0,ex:"in January = เวลาเจาะจงที่จบแล้ว → started"},
+ {t:'bank',lv:2,q:"Our class ___ (visit) Ayutthaya last term. Since then, we ___ (learn) a lot about Thai history.",o:["visited","have learned","have visited","learned"],a:["visited","have learned"],ex:"last term → visited / Since then (ตั้งแต่นั้นถึงตอนนี้) → have learned"},
+ {t:'bank',lv:3,q:"My grandmother ___ (live) in Nan for 40 years, but she ___ (move) to Bangkok last year.",o:["lived","moved","has lived","has moved"],a:["lived","moved"],ex:"ถึงจะมี for 40 years แต่ตอนนี้ไม่ได้อยู่น่านแล้ว (ช่วงเวลาจบแล้ว) → lived / last year → moved"},
+ {t:'type',lv:1,q:"Look at my new phone! I ___ (buy) it yesterday.",a:["bought"],ex:"yesterday → bought"},
+ {t:'type',lv:2,q:"We ___ (know) each other since we were five.",a:["have known","'ve known"],ex:"since + know (stative) → have known"},
+ {t:'type',lv:2,q:"Have you ever seen snow? — Yes, I ___ (see) it in Japan two years ago.",a:["saw"],ex:"ถามด้วย Present Perfect แต่ตอบรายละเอียดพร้อมเวลา (two years ago) → saw"},
+ {t:'spot',lv:1,c:["Last year,","my family","has travelled","to Vietnam."],a:2,fix:"travelled",ex:"Last year → Past Simple"},
+ {t:'spot',lv:2,c:["I","have lived","in Khon Kaen","when I was a child."],a:1,fix:"lived",ex:"when I was a child = ช่วงที่จบแล้ว → lived"},
+ {t:'dlg',lv:1,d:[["A","How was your weekend?"],["B","Great! I ___ my cousins in Rayong."]],o:["visited","have visited","have been visiting","visit"],a:0,ex:"ถามถึงสุดสัปดาห์ที่ผ่านไปแล้ว → Past Simple"},
+ {t:'dlg',lv:2,d:[["A","Have you finished the science project?"],["B","Not yet, but I ___ most of it."]],o:["have done","was doing","do","will be done"],a:0,ex:"ผลงานถึงตอนนี้ (ทำเสร็จไปส่วนใหญ่แล้ว) → have done"},
+ {t:'order',lv:1,w:["I","have","never","been","to","Phuket","before"],end:".",ex:"have + never + been to … before"},
+ {t:'order',lv:1,w:["We","moved","to","this","house","in","2015"],end:".",ex:"in 2015 → Past Simple"},
+ {t:'sort',lv:3,q:"Story sentences: which tense fits the verb in brackets?",bins:["Past Simple","Present Perfect"],it:[["Once upon a time, a king ___ in a big palace. (live)",0],["Breaking news: The government ___ a new law. It starts today. (announce)",1],["Grandpa ___ a big fish in the river in 1975. (catch)",0],["I ___ this story many times. (hear)",1],["Yesterday the teacher ___ us a ghost story. (tell)",0],["So far, we ___ three chapters of the book. (read)",1]],ex:"นิทาน/เวลาในอดีต → Past Simple • ข่าวใหม่/many times/so far → Present Perfect"},
+ {t:'tl',lv:2,tl:'bar-past',lab:'2010 → 2018 (then he left)',q:"Which sentence matches the timeline?",o:["He worked in Bangkok for eight years.","He has worked in Bangkok for eight years.","He has been working in Bangkok since 2010.","He works in Bangkok."],a:0,ex:"ช่วงเวลาจบในอดีต (ย้ายออกแล้ว) → Past Simple + for"}
+];
+
+BANK.B6 = [
+ {t:'mc',lv:3,q:"\"I started learning the piano three years ago.\" = I ___ the piano for three years.",o:["have been learning","learned","am learning","was learning"],a:0,ex:"เริ่มเมื่อ 3 ปีก่อนและยังเรียนอยู่ → have been learning … for three years"},
+ {t:'mc',lv:3,q:"\"It's been five years since I last saw her.\" = I ___ her for five years.",o:["haven't seen","didn't see","don't see","wasn't seeing"],a:0,ex:"ไม่ได้เจอมาตลอด 5 ปีจนถึงตอนนี้ → haven't seen"},
+ {t:'mc',lv:3,q:"\"The last time I ate sushi was in May.\" = I ___ sushi since May.",o:["haven't eaten","didn't eat","haven't been eaten","don't eat"],a:0,ex:"The last time … was = ไม่ได้ทำตั้งแต่นั้น → haven't eaten … since"},
+ {t:'mc',lv:3,q:"\"This is the first time I have flown on a plane.\" = I ___ on a plane before.",o:["have never flown","never fly","don't fly","haven't been flown"],a:0,ex:"ครั้งแรก = ไม่เคยมาก่อน → have never flown … before"},
+ {t:'mc',lv:3,q:"\"When did you start working here?\" = How long ___ here?",o:["have you worked","did you work","do you work","were you working"],a:0,ex:"When did you start…? เปลี่ยนเป็น How long + Present Perfect"},
+ {t:'dlg',lv:2,d:[["A","Excuse me, is this seat taken?"],["B","Sorry, my friend ___ to the restroom. She'll be right back."]],o:["has just gone","just goes","has just been","went yesterday"],a:0,ex:"เพิ่งไปและยังไม่กลับ → has just gone"},
+ {t:'dlg',lv:3,d:[["A","You speak Japanese really well!"],["B","Thanks. I ___ in Osaka for two years when I was a kid."]],o:["lived","have lived","have been living","live"],a:0,ex:"when I was a kid = ช่วงที่จบแล้ว → lived (ถึงจะมี for two years)"},
+ {t:'dlg',lv:3,d:[["A","Is the new mall open?"],["B","Yes, it ___ last Saturday. I ___ there twice already!"]],o:["opened / have been","has opened / went","opened / went","has opened / have been"],a:0,ex:"last Saturday → opened / twice already → have been"},
+ {t:'mc',lv:2,q:"Which sentence is CORRECT?",o:["Have you ever been to Nan?","I have visited my uncle last weekend.","She has bought a car two days ago.","When have you arrived?"],a:0,ex:"ever + ประสบการณ์ → Present Perfect • last weekend / ago / When → Past Simple"},
+ {t:'mc',lv:3,q:"Which sentence is INCORRECT?",o:["I have lived in Krabi in 2012.","I have lived here since 2018.","I lived in Krabi from 2010 to 2015.","I haven't been to Krabi since 2015."],a:0,ex:"in 2012 = ปีที่จบแล้ว ใช้กับ Present Perfect ไม่ได้ → I lived in Krabi in 2012."},
+ {t:'spot',lv:3,c:["Since","I came","to this school,","I made","many friends."],a:3,fix:"I have made",ex:"Since + เหตุการณ์ในอดีต → ประโยคหลักใช้ Present Perfect"},
+ {t:'spot',lv:3,c:["How long ago","have you started","learning Thai?"],a:1,fix:"did you start",ex:"How long ago ถามจุดเวลาในอดีต → did you start"},
+ {t:'type',lv:3,q:"My brother has worked as a pilot since he ___ (graduate) in 2019.",a:["graduated"],ex:"ประโยคหลัง since ที่บอกจุดเริ่มต้นในอดีต + in 2019 → Past Simple: graduated"},
+ {t:'type',lv:2,q:"I can't open the door. I think somebody ___ (lock) it.",a:["has locked","'s locked"],ex:"ผลยังอยู่ตอนนี้ (เปิดไม่ได้) → has locked"},
+ {t:'sort',lv:3,q:"Correct or incorrect?",bins:["✔ Correct","✘ Incorrect"],it:[["She has lived abroad for years.",0],["He has died in 1990.",1],["I've never met a famous person.",0],["We have finished the test an hour ago.",1],["They got married in 2015 and have had two kids since then.",0],["I have been to Japan last year.",1]],ex:"ระบุเวลาที่จบแล้ว (in 1990, an hour ago, last year) ห้ามใช้ Present Perfect"}
+];
+
+/* ===== NEW MISSIONS (Topic A, 20 items each, with vocabulary items 'voc') ===== */
+MISSIONS.push(
+  {id:'A4', topic:'A', icon:'🔎', title:'Clues & Evidence', th:'ร่องรอยบอกอะไร? + ศัพท์บอกสภาพ', color:'#38bdf8'},
+  {id:'A5', topic:'A', icon:'🎒', title:'School & Work Life', th:'ชีวิตนักเรียน/วัยทำงาน + ศัพท์การเรียน', color:'#4ade80'},
+  {id:'A6', topic:'A', icon:'🧠', title:'Vocab + Tense Mix', th:'ศัพท์ในบริบท + เขียนประโยคใหม่ แนว TGAT', color:'#e879f9'}
+);
+MISSIONS.sort(function(a, b){ return a.id < b.id ? -1 : 1; });
+
+BANK.A4 = [
+ {t:'voc',lv:1,q:"\"Look at Tom's clothes. They're soaked!\" — The word 'soaked' means…",o:["very wet","very dirty","very tired","very hungry"],a:0,ex:"soaked = เปียกโชก"},
+ {t:'dlg',lv:1,d:[["A","Why are you soaked?"],["B","I ___ in the rain for an hour waiting for the bus."]],o:["have been standing","stand","am stood","have standing"],a:0,ex:"เปียกเพราะยืนตากฝนมาต่อเนื่อง 1 ชั่วโมง (ร่องรอยของกิจกรรม) → have been standing"},
+ {t:'voc',lv:2,q:"\"Her eyes are red and puffy.\" — 'puffy' (Thai meaning) is…",o:["บวม","แห้ง","สวยงาม","ปิดสนิท"],a:0,ex:"puffy = บวม (มักใช้กับตา/หน้า)"},
+ {t:'mc',lv:1,q:"Her eyes are red and puffy. She ___.",o:["has been crying","cries every day","is cried","had cry"],a:0,ex:"ตาบวม = ร่องรอยของการกระทำที่เพิ่งจบ → has been crying"},
+ {t:'voc',lv:1,q:"\"I'm exhausted.\" — The closest meaning is…",o:["extremely tired","very excited","very angry","extremely bored"],a:0,ex:"exhausted = เหนื่อยมาก หมดแรง"},
+ {t:'mc',lv:1,q:"I'm exhausted because I ___ heavy boxes all afternoon.",o:["have been carrying","carries","am carried","had carry"],a:0,ex:"เหนื่อยเพราะทำกิจกรรมต่อเนื่องทั้งบ่าย → have been carrying"},
+ {t:'mc',lv:2,q:"I'm exhausted, but I ___ all 50 boxes to the truck. The job is done!",o:["have carried","have been carrying","carry","am carrying"],a:0,ex:"เน้นจำนวน (all 50 boxes) + งานเสร็จแล้ว → have carried"},
+ {t:'voc',lv:2,q:"\"My muscles are sore after the gym.\" — 'sore' (Thai meaning) is…",o:["ปวดเมื่อย","แข็งแรง","ใหญ่ขึ้น","หายดี"],a:0,ex:"sore = ปวด เจ็บ ระบม"},
+ {t:'bank',lv:2,q:"My legs are sore. I ___ (cycle) 40 kilometres today!",o:["have cycled","have been cycling","am cycling","cycle"],a:["have cycled"],ex:"บอกระยะทาง/จำนวนที่ทำได้ (40 kilometres) → have cycled"},
+ {t:'bank',lv:2,q:"The kitchen is a mess and smells of garlic! Who ___ (cook)?",o:["has been cooking","will cook","cooks","is cooked"],a:["has been cooking"],ex:"ครัวเลอะ + มีกลิ่น = ร่องรอยของกิจกรรม → has been cooking"},
+ {t:'voc',lv:2,q:"\"Your shoes are filthy!\" — 'filthy' means…",o:["extremely dirty","extremely clean","very small","very old"],a:0,ex:"filthy = สกปรกมาก"},
+ {t:'spot',lv:2,c:["Look!","Someone","has been eating","all the cookies!"],a:2,fix:"has eaten",ex:"all the cookies = กินหมดแล้ว (ผลลัพธ์ที่เสร็จ) → has eaten"},
+ {t:'spot',lv:3,c:["You're sunburnt!","Have you lain","in the sun","all day?"],a:1,fix:"Have you been lying",ex:"ผิวไหม้ = ร่องรอยจากกิจกรรมต่อเนื่องทั้งวัน → Have you been lying"},
+ {t:'voc',lv:1,q:"\"You're sunburnt!\" — 'sunburnt' (Thai meaning) is…",o:["ผิวไหม้แดด","ผิวขาวขึ้น","หนาวสั่น","เปียกฝน"],a:0,ex:"sunburnt = ผิวไหม้แดด"},
+ {t:'type',lv:2,q:"Why is the floor wet? — The dog ___ (play) in its water bowl.",a:["has been playing","'s been playing"],ex:"พื้นเปียก = ร่องรอยของกิจกรรม → has been playing"},
+ {t:'type',lv:2,q:"Great news! Our lost dog ___ (find) its way home.",a:["has found","'s found"],ex:"ผลลัพธ์สำเร็จแล้ว (กลับบ้านแล้ว) → has found"},
+ {t:'tl',lv:1,tl:'bar-now',lab:'since 7 a.m. (still working)',q:"Dad looks tired. He ___ in the garden since 7 a.m.",o:["has been working","worked","works","is working"],a:0,ex:"ทำต่อเนื่องตั้งแต่ 7 โมงเช้าและยังทำอยู่ → has been working"},
+ {t:'sort',lv:3,q:"Evidence of an activity, or a finished result?",bins:["Present Perfect Simple","Present Perfect Continuous"],it:[["Your hands are black. Have you ___ the car? (fix)",1],["The car works now! Dad has ___ it. (fix)",0],["Why are you out of breath? Have you ___? (run)",1],["She has ___ a marathon three times. (run)",0],["The room smells of paint. Someone has ___. (paint)",1],["Look! I have ___ the whole room blue. (paint)",0]],ex:"ร่องรอย/กลิ่น/เหนื่อย → Continuous • งานเสร็จ/จำนวนครั้ง → Simple"},
+ {t:'order',lv:1,w:["What","have","you","been","doing","in","the","garden"],end:"?",ex:"What + have + S + been + V-ing …? (ถามกิจกรรมที่ทำมา)"},
+ {t:'dlg',lv:2,d:[["A","Wow, the house looks so clean!"],["B","Thanks! I ___ every single room."]],o:["have cleaned","have been cleaning","clean","am cleaning"],a:0,ex:"every single room = ทำเสร็จครบทุกห้อง (ผลลัพธ์) → have cleaned"}
+];
+
+BANK.A5 = [
+ {t:'voc',lv:1,q:"\"The deadline for the project is Friday.\" — 'deadline' means…",o:["the latest time to finish something","a long line of people","a broken phone","a class timetable"],a:0,ex:"deadline = กำหนดส่ง เส้นตาย"},
+ {t:'mc',lv:2,q:"The deadline is tomorrow, and I ___ only half of my assignment.",o:["have finished","have been finishing","finish","am finished"],a:0,ex:"บอกปริมาณงานที่เสร็จแล้ว (half) → have finished"},
+ {t:'voc',lv:1,q:"\"I have three assignments to do this weekend.\" — 'assignment' (Thai meaning) is…",o:["งานที่ได้รับมอบหมาย","ห้องเรียน","การสอบปลายภาค","วันหยุดยาว"],a:0,ex:"assignment = งาน/การบ้านที่ได้รับมอบหมาย"},
+ {t:'dlg',lv:2,d:[["A","You look stressed."],["B","I ___ on this assignment since 6 a.m., and it's still not finished."]],o:["have been working","will work","work","am worked"],a:0,ex:"ทำต่อเนื่องตั้งแต่ 6 โมงเช้าและยังไม่เสร็จ → have been working"},
+ {t:'voc',lv:2,q:"\"We need to rehearse the school play.\" — 'rehearse' means…",o:["practise before a performance","watch a show","buy a ticket","clean the stage"],a:0,ex:"rehearse = ซ้อม (ก่อนแสดงจริง)"},
+ {t:'mc',lv:2,q:"The drama club is tired. They ___ for the school play every evening this week.",o:["have been rehearsing","rehearse tomorrow","had rehearse","are rehearsed"],a:0,ex:"ทำซ้ำต่อเนื่องในช่วงนี้จนถึงตอนนี้ + เหนื่อย → have been rehearsing"},
+ {t:'bank',lv:2,q:"We ___ (rehearse) the play five times, so we're ready for the show.",o:["have rehearsed","have been rehearsing","rehearse","are rehearsing"],a:["have rehearsed"],ex:"five times = นับจำนวนครั้ง → have rehearsed"},
+ {t:'voc',lv:2,q:"\"I need to revise for the O-NET.\" — 'revise' here means…",o:["review lessons before a test","change your name","finish school","teach a class"],a:0,ex:"revise (BrE) = ทบทวนบทเรียนก่อนสอบ"},
+ {t:'type',lv:2,q:"I ___ (revise) for the O-NET all week. My brain hurts!",a:["have been revising","'ve been revising"],ex:"all week + ผลข้างเคียง (ปวดหัว) → have been revising"},
+ {t:'type',lv:2,q:"Good progress! I ___ (revise) four chapters so far.",a:["have revised","'ve revised"],ex:"four chapters so far = จำนวนที่ทำเสร็จ → have revised"},
+ {t:'voc',lv:1,q:"\"Please submit your homework online.\" — 'submit' means…",o:["send in for checking","take away","forget","copy from a friend"],a:0,ex:"submit = ส่ง (งาน/เอกสาร)"},
+ {t:'spot',lv:2,c:["Good news!","I","have been submitting","all my assignments."],a:2,fix:"have submitted",ex:"all my assignments = ส่งครบหมดแล้ว (ผลลัพธ์) → have submitted"},
+ {t:'spot',lv:2,c:["Ms. Lee","has been knowing","every student","since 2015."],a:1,fix:"has known",ex:"know เป็น stative verb → has known"},
+ {t:'voc',lv:1,q:"\"She is a volunteer at the animal shelter.\" — A 'volunteer' is…",o:["someone who helps without being paid","a famous singer","a school director","a lazy student"],a:0,ex:"volunteer = อาสาสมัคร"},
+ {t:'mc',lv:2,q:"Pim loves animals. She ___ at the animal shelter every Saturday since March.",o:["has been volunteering","volunteers since","volunteered tomorrow","is volunteer"],a:0,ex:"ทำเป็นประจำต่อเนื่องตั้งแต่ March จนถึงตอนนี้ → has been volunteering"},
+ {t:'mc',lv:2,q:"How many hours ___ at the shelter this month?",o:["has Pim volunteered","has Pim been volunteering","does Pim volunteer since","Pim has volunteered"],a:0,ex:"How many = ถามจำนวน → has Pim volunteered"},
+ {t:'voc',lv:2,q:"\"He is doing an internship at a bank.\" — 'internship' (Thai meaning) is…",o:["การฝึกงาน","การลาออก","การสัมภาษณ์งาน","เงินเดือน"],a:0,ex:"internship = การฝึกงาน"},
+ {t:'order',lv:2,w:["She","has","been","doing","an","internship","since","June"],end:".",ex:"has been + V-ing + since + จุดเริ่มต้น"},
+ {t:'sort',lv:3,q:"Simple or Continuous?",bins:["Present Perfect Simple","Present Perfect Continuous"],it:[["I've ___ three essays this week. (write)",0],["I've ___ essays all week. I'm so tired. (write)",1],["He's ___ to the robotics club since M.4. (belong)",0],["They've ___ for the science fair for months. (prepare)",1],["We've ___ our project. Finally! (submit)",0],["She's ___ in the library all afternoon. (study)",1]],ex:"จำนวน/งานเสร็จ/stative (belong) → Simple • กิจกรรมต่อเนื่อง/เหนื่อย → Continuous"},
+ {t:'tl',lv:2,tl:'dots-now',lab:'3 awards (when? not important)',q:"Which sentence matches the timeline?",o:["Our school band has won three awards.","Our school band has been winning three awards.","Our school band is winning three awards.","Our school band wins three awards."],a:0,ex:"นับจำนวนรางวัล ไม่ระบุเวลา → has won"}
+];
+
+BANK.A6 = [
+ {t:'voc',lv:2,q:"\"I've been trying to quit sugar for weeks, but it's hard.\" — 'quit' means…",o:["stop doing","start doing","enjoy","buy"],a:0,ex:"quit = เลิก (ทำบางอย่าง)"},
+ {t:'mc',lv:3,q:"\"I started reading this novel on Monday. I'm still reading it.\" = I ___ this novel since Monday.",o:["have been reading","read","am reading","was reading"],a:0,ex:"เริ่มในอดีต + ยังทำอยู่ → have been reading … since"},
+ {t:'mc',lv:3,q:"Which sentence focuses on the NUMBER of things completed?",o:["I've read three novels this month.","I've been reading novels all month.","I'm reading a novel.","I was reading novels."],a:0,ex:"three novels = จำนวนที่ทำเสร็จ → Present Perfect Simple"},
+ {t:'voc',lv:2,q:"\"My phone has been acting up all day.\" — 'acting up' means…",o:["not working properly","working perfectly","ringing loudly","charging fast"],a:0,ex:"act up = ทำงานผิดปกติ รวน"},
+ {t:'dlg',lv:2,d:[["A","Is your laptop OK now?"],["B","Yes, the technician ___ it. It works perfectly."]],o:["has repaired","has been repairing","repairs","is repairing"],a:0,ex:"ซ่อมเสร็จแล้ว ใช้งานได้ (ผลลัพธ์) → has repaired"},
+ {t:'voc',lv:2,q:"\"We've been saving up for a new laptop.\" — 'save up' means…",o:["keep money for later","spend all your money","borrow money","lose money"],a:0,ex:"save up = เก็บเงิน ออมเงิน"},
+ {t:'bank',lv:3,q:"We ___ (save) for six months, and we ___ (save) 8,000 baht so far.",o:["have been saving","have saved","saved","are saving"],a:["have been saving","have saved"],ex:"ช่วงเวลาต่อเนื่อง 6 เดือน → have been saving / จำนวนเงิน so far → have saved"},
+ {t:'voc',lv:2,q:"\"Look at everything we have accomplished!\" — 'accomplish' means…",o:["succeed in doing","fail to do","forget","delay"],a:0,ex:"accomplish = ทำสำเร็จ"},
+ {t:'mc',lv:2,q:"Look at everything we ___ today! The whole project is finished.",o:["have accomplished","have been accomplishing","accomplish","are accomplishing"],a:0,ex:"งานเสร็จทั้งหมด (ผลลัพธ์) → have accomplished"},
+ {t:'spot',lv:2,c:["How long","have you been knowing","your best friend?"],a:1,fix:"have you known",ex:"know เป็น stative verb → How long have you known…?"},
+ {t:'spot',lv:2,c:["She","has been writing","five emails","this morning."],a:1,fix:"has written",ex:"five emails = จำนวน → has written"},
+ {t:'type',lv:2,q:"Sorry, I ___ (not / check) my messages today. What did you say?",a:["haven't checked","have not checked"],ex:"ปฏิเสธ + ผลถึงตอนนี้ (ยังไม่ได้เช็ก) → haven't checked"},
+ {t:'type',lv:2,q:"How long ___ (you / wait)? — About twenty minutes.",a:["have you been waiting","have you waited"],ex:"How long + กิจกรรมต่อเนื่องถึงตอนนี้ → have you been waiting (เป็นธรรมชาติที่สุด)"},
+ {t:'voc',lv:2,q:"\"He has been struggling with maths this term.\" — 'struggle with' means…",o:["have difficulty with","have fun with","win easily","sleep well"],a:0,ex:"struggle with = ลำบาก/มีปัญหากับ"},
+ {t:'dlg',lv:2,d:[["A","How's your little brother doing at school?"],["B","Not great. He ___ with maths this term, so I help him every evening."]],o:["has been struggling","struggles tomorrow","struggled next","is struggled"],a:0,ex:"ปัญหาต่อเนื่องตลอดเทอมจนถึงตอนนี้ → has been struggling"},
+ {t:'voc',lv:1,q:"\"I've gained 3 kg since the holidays.\" — 'gain weight' means…",o:["become heavier","become lighter","lose a game","win money"],a:0,ex:"gain weight = น้ำหนักขึ้น"},
+ {t:'mc',lv:2,q:"I ___ 3 kg since the holidays. I need to exercise!",o:["have gained","have been gaining","gain","am gaining"],a:0,ex:"บอกปริมาณ (3 kg) → have gained"},
+ {t:'order',lv:2,w:["How","many","pages","have","you","translated","so","far"],end:"?",ex:"How many + have + S + V3 + so far?"},
+ {t:'sort',lv:3,q:"Correct or incorrect?",bins:["✔ Correct","✘ Incorrect"],it:[["We've been waiting since noon.",0],["I've been knowing her for years.",1],["He's lost his wallet, so he can't pay.",0],["She's been buying three dresses today.",1],["They've been arguing all evening.",0],["I've been understanding this lesson now.",1]],ex:"know/understand = stative ห้ามใช้ -ing • three dresses (จำนวน) ต้องใช้ Simple"},
+ {t:'tl',lv:2,tl:'bar-now',lab:'January → now (still learning)',q:"I ___ Korean since January, and I can already read Hangul.",o:["have been learning","learned","learn","was learning"],a:0,ex:"เริ่ม January และยังเรียนอยู่ → have been learning"}
+];
+
 /* ============================================================
    PERFECT TIME QUEST — By T.OAT · Thanakhan-oomsin School
    วาง URL ของ Google Apps Script (ลงท้าย /exec) ในบรรทัดด้านล่าง
@@ -855,15 +1018,15 @@ var SLOT_DEF = [
   {k:'hero', n:'แบนเนอร์หน้าแรก', size:'1600 × 600 px'},
   {k:'bg', n:'พื้นหลังทั้งเว็บ', size:'1920 × 1080 px'},
   {k:'logo', n:'โลโก้กลางนาฬิกา', size:'512 × 512 px (สี่เหลี่ยมจัตุรัส)'},
-  {k:'A1', n:'ปกด่าน A1', size:'800 × 450 px'}, {k:'A2', n:'ปกด่าน A2', size:'800 × 450 px'}, {k:'A3', n:'ปกด่าน A3', size:'800 × 450 px'},
-  {k:'B1', n:'ปกด่าน B1', size:'800 × 450 px'}, {k:'B2', n:'ปกด่าน B2', size:'800 × 450 px'}, {k:'B3', n:'ปกด่าน B3', size:'800 × 450 px'},
+  {k:'A1', n:'ปกด่าน A1', size:'800 × 450 px'}, {k:'A2', n:'ปกด่าน A2', size:'800 × 450 px'}, {k:'A3', n:'ปกด่าน A3', size:'800 × 450 px'}, {k:'A4', n:'ปกด่าน A4', size:'800 × 450 px'}, {k:'A5', n:'ปกด่าน A5', size:'800 × 450 px'}, {k:'A6', n:'ปกด่าน A6', size:'800 × 450 px'},
+  {k:'B1', n:'ปกด่าน B1', size:'800 × 450 px'}, {k:'B2', n:'ปกด่าน B2', size:'800 × 450 px'}, {k:'B3', n:'ปกด่าน B3', size:'800 × 450 px'}, {k:'B4', n:'ปกด่าน B4', size:'800 × 450 px'}, {k:'B5', n:'ปกด่าน B5', size:'800 × 450 px'}, {k:'B6', n:'ปกด่าน B6', size:'800 × 450 px'},
   {k:'EXAM', n:'ปกสอบจริง', size:'1600 × 500 px'},
   {k:'cert', n:'พื้นหลังรูปผลคะแนน', size:'1080 × 1350 px (แนวตั้ง)'}
 ];
-var TYPE_NAME = {mc:'เลือกคำตอบ', dlg:'บทสนทนา', tl:'อ่านไทม์ไลน์', bank:'เติมบัตรคำ', type:'พิมพ์คำตอบ', spot:'หาจุดผิด', order:'เรียงประโยค', sort:'จัดหมวดหมู่'};
-var TYPE_ICON = {mc:'🎯', dlg:'💬', tl:'📈', bank:'🧩', type:'⌨️', spot:'🔍', order:'🔀', sort:'🗂️'};
+var TYPE_NAME = {voc:'คำศัพท์', mc:'เลือกคำตอบ', dlg:'บทสนทนา', tl:'อ่านไทม์ไลน์', bank:'เติมบัตรคำ', type:'พิมพ์คำตอบ', spot:'หาจุดผิด', order:'เรียงประโยค', sort:'จัดหมวดหมู่'};
+var TYPE_ICON = {voc:'📚', mc:'🎯', dlg:'💬', tl:'📈', bank:'🧩', type:'⌨️', spot:'🔍', order:'🔀', sort:'🗂️'};
 var TYPE_HINT = {
-  mc:'เลือกคำตอบที่ถูกต้องที่สุด', dlg:'เลือกคำตอบที่เหมาะกับบทสนทนา', tl:'ดูไทม์ไลน์แล้วเลือกประโยคที่ตรงที่สุด',
+  voc:'อ่านประโยค แล้วเลือกความหมายของคำศัพท์ที่ถูกต้อง', mc:'เลือกคำตอบที่ถูกต้องที่สุด', dlg:'เลือกคำตอบที่เหมาะกับบทสนทนา', tl:'ดูไทม์ไลน์แล้วเลือกประโยคที่ตรงที่สุด',
   bank:'แตะบัตรคำเพื่อเติมลงในช่องว่าง (แตะช่องที่เติมแล้วเพื่อเอาออก)', type:'พิมพ์เฉพาะคำที่ต้องเติมในช่องว่าง',
   spot:'แตะส่วนของประโยคที่ผิด', order:'แตะคำเรียงให้เป็นประโยคที่ถูกต้อง', sort:'ลากหรือแตะบัตร แล้วแตะกล่องเพื่อจัดหมวดหมู่ (ต้องถูกทุกใบจึงได้คะแนน)'
 };
@@ -884,6 +1047,10 @@ function lsSet(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); return t
 function lsDel(k){ try { localStorage.removeItem(k); } catch(e){} }
 function S(k){ return APP.settings[k] != null ? String(APP.settings[k]) : String(DEFAULT_SETTINGS[k] == null ? '' : DEFAULT_SETTINGS[k]); }
 function on(k){ return S(k) === '1'; }
+var NEW_MISSIONS = ['A4', 'A5', 'A6', 'B4', 'B5', 'B6'];
+function enabledMissions(){ var raw = S('missions'), list = raw.split(',').map(function(x){ return x.trim(); });
+  if (raw.indexOf('~v2') < 0) NEW_MISSIONS.forEach(function(id){ if (list.indexOf(id) < 0) list.push(id); });
+  return list; }
 function nowStr(){ var d = new Date(); function p(n){ return (n < 10 ? '0' : '') + n; } return d.getFullYear() + '-' + p(d.getMonth()+1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()); }
 function thaiDate(){ try { return new Date().toLocaleString('th-TH', {dateStyle:'long', timeStyle:'short'}); } catch(e){ return nowStr(); } }
 function deviceId(){ var d = lsGet('ptq_dev', null); if (!d){ d = 'D' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8); lsSet('ptq_dev', d); } return d; }
@@ -920,20 +1087,26 @@ document.addEventListener('pointerdown', function(e){
 
 /* ---------------- background particles ---------------- */
 var FX = (function(){
-  var vt = 0, cv = $('#fx'), g = cv.getContext('2d'), W, H, cx, cy, stars = [], speed = 1.2, target = 1.2, warpT = 0, run = true, dpr = Math.min(window.devicePixelRatio || 1, 1.5), mx = 0, my = 0, pmx = 0, pmy = 0;
+  var vt = 0, lastF = 0, litePrev = null, cv = $('#fx'), g = cv.getContext('2d'), W, H, cx, cy, stars = [], speed = 1.2, target = 1.2, warpT = 0, run = true, dpr = 1, mx = 0, my = 0, pmx = 0, pmy = 0;
   var HUES = [290, 260, 190, 45, 320];
   function mk(far){ return {x:(Math.random() - .5) * W * 2, y:(Math.random() - .5) * H * 2, z:far ? W : Math.random() * W, pz:0, h:HUES[Math.floor(Math.random() * HUES.length)]}; }
-  function init(){ W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; cx = W / 2; cy = H / 2; stars = [];
-    var n = Math.min(260, Math.floor(innerWidth * innerHeight / 6000)); for (var i = 0; i < n; i++){ var s = mk(false); s.pz = s.z; stars.push(s); } }
+  function init(){ var lite = document.body.classList.contains('lite'); litePrev = lite; dpr = lite ? 1 : Math.min(window.devicePixelRatio || 1, 1.5); W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; cx = W / 2; cy = H / 2; stars = [];
+    var n = lite ? Math.min(90, Math.floor(innerWidth * innerHeight / 14000)) : Math.min(260, Math.floor(innerWidth * innerHeight / 6000)); for (var i = 0; i < n; i++){ var s = mk(false); s.pz = s.z; stars.push(s); } }
   function frame(){
     requestAnimationFrame(frame);
     if (!run || document.body.classList.contains('lowfx')) return;
+    var lite = document.body.classList.contains('lite');
+    if (lite !== litePrev) init();
     if (warpT && Date.now() > warpT){ target = 1.2; warpT = 0; }
+    if (lite){
+      var nowT = performance.now(); if (nowT - lastF < 33) return; lastF = nowT;
+      if (!warpT && speed < 1.4 && (_curScr === 'scr-play' || _curScr === 'scr-result')) return;
+    }
     speed += (target - speed) * .06; pmx += (mx - pmx) * .05; pmy += (my - pmy) * .05;
     g.fillStyle = speed > 6 ? 'rgba(7,6,26,.35)' : 'rgba(7,6,26,1)'; g.fillRect(0, 0, W, H);
     var ox = cx - pmx * 40 * dpr, oy = cy - pmy * 40 * dpr, streak = speed > 3;
     vt += .0025 * speed; g.lineWidth = 1.5 * dpr;
-    for (var vi = 0; vi < 7; vi++){ var ph = ((vi / 7) + vt) % 1, rr = Math.pow(ph, 2.2) * Math.max(W, H) * .9, al = Math.sin(ph * Math.PI) * .22;
+    if (!lite) for (var vi = 0; vi < 7; vi++){ var ph = ((vi / 7) + vt) % 1, rr = Math.pow(ph, 2.2) * Math.max(W, H) * .9, al = Math.sin(ph * Math.PI) * .22;
       g.strokeStyle = 'hsla(' + (260 + vi * 22) % 360 + ',100%,70%,' + al + ')'; g.beginPath(); g.ellipse(ox, oy, rr, rr * .62, vt * .6 + vi * .4, 0, 6.283); g.stroke(); }
     for (var i = 0; i < stars.length; i++){
       var s = stars[i]; s.pz = s.z; s.z -= speed * dpr;
@@ -951,16 +1124,23 @@ var FX = (function(){
   init(); requestAnimationFrame(frame);
   return { warp:function(ms, v){ target = v || 38; warpT = Date.now() + (ms || 700); } };
 })();
-function setLowFx(v){ document.body.classList.toggle('lowfx', !!v); lsSet('ptq_lowfx', !!v); }
+var FX_MODES = ['full', 'lite', 'low'], FX_LABEL = {full:'เต็ม ✨', lite:'ลื่น ⚡', low:'ประหยัด 🔋'};
+var IS_TOUCH = IS_IOS || /Android|Mobile/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches && !matchMedia('(pointer:fine)').matches);
+function fxMode(){ return document.body.classList.contains('lowfx') ? 'low' : document.body.classList.contains('lite') ? 'lite' : 'full'; }
+function setFxMode(m, save){ document.body.classList.toggle('lowfx', m === 'low'); document.body.classList.toggle('lite', m !== 'full'); if (save) lsSet('ptq_fxmode', m); }
+function setLowFx(v){ setFxMode(v ? 'low' : (IS_TOUCH ? 'lite' : 'full'), true); }
+function cycleFx(){ var m = FX_MODES[(FX_MODES.indexOf(fxMode()) + 1) % 3]; setFxMode(m, true); toast('เอฟเฟกต์: ' + FX_LABEL[m] + (m === 'full' && IS_TOUCH ? ' (อาจทำให้เครื่องร้อน)' : '')); }
 (function(){
-  var v = lsGet('ptq_lowfx', null);
-  if (v !== null){ setLowFx(v); return; }
-  setLowFx(false);
-  // no saved choice: measure real frame rate for 4 s; if the device struggles, switch to economy mode automatically
+  var m = lsGet('ptq_fxmode', null), legacy = lsGet('ptq_lowfx', null);
+  if (m && FX_MODES.indexOf(m) >= 0){ setFxMode(m); return; }
+  if (legacy === true){ setFxMode('low'); return; } // old builds stored 'false' on every device automatically, so only honour an explicit economy choice
+  setFxMode(IS_TOUCH ? 'lite' : 'full');
   var frames = 0, t0 = 0;
-  function tick(t){ if (!t0) t0 = t; frames++; if (t - t0 < 4000) { requestAnimationFrame(tick); return; }
-    var fps = frames * 1000 / (t - t0);
-    if (fps < 28 && !document.hidden){ setLowFx(true); toast('⚡ เครื่องนี้ใช้โหมดประหยัดอัตโนมัติ เพื่อความลื่น (กด ✨ เพื่อเปิดเอฟเฟกต์เต็ม)', '', 4500); } }
+  function tick(t){ if (!t0) t0 = t; frames++; if (t - t0 < 4000){ requestAnimationFrame(tick); return; }
+    var fps = frames * 1000 / (t - t0); if (document.hidden) return;
+    var cur = fxMode();
+    if (cur === 'full' && fps < 45){ setFxMode('lite'); toast('⚡ ปรับเป็นโหมด "ลื่น" อัตโนมัติ (กด ✨ เพื่อเปลี่ยน)', '', 4000); }
+    else if (cur === 'lite' && fps < 28){ setFxMode('low'); toast('🔋 ปรับเป็นโหมดประหยัดอัตโนมัติ (กด ✨ เพื่อเปลี่ยน)', '', 4000); } }
   setTimeout(function(){ requestAnimationFrame(tick); }, 1500);
 })();
 
@@ -1156,11 +1336,11 @@ function renderLogin(){
       return '<button class="cls-btn glass ' + (LOGIN.cls === c ? 'on' : '') + '" data-cls="' + esc(c) + '"><span class="planet" style="--pc:' + ['#ff4fd8', '#22d3ee', '#ffd166', '#7c5cff', '#2ee59d'][classes.indexOf(c) % 5] + ';animation-delay:-' + classes.indexOf(c) + 's"></span><b>ม.' + esc(c) + '</b><small>👥 ' + n + ' คน</small></button>'; }).join('') + '</div>' +
     '<div id="nameStep" class="' + (LOGIN.cls ? '' : 'hidden') + '"><div class="step-title"><span class="n">2</span>แตะชื่อของฉัน</div>' +
     '<input class="input" id="nameSearch" placeholder="🔎 ค้นหาชื่อหรือเลขที่…" style="margin-bottom:12px" value="' + esc(LOGIN.q) + '"><div class="names" id="names"></div></div>' +
-    '<div class="footer">© ' + new Date().getFullYear() + ' T.OAT · <button type="button" id="admBtn">🔐 สำหรับครู</button> · <button type="button" id="fxBtn">✨ เอฟเฟกต์: ' + (document.body.classList.contains('lowfx') ? 'ประหยัด' : 'เต็ม') + '</button></div>';
+    '<div class="footer">© ' + new Date().getFullYear() + ' T.OAT · <button type="button" id="admBtn">🔐 สำหรับครู</button> · <button type="button" id="fxBtn">✨ เอฟเฟกต์: ' + FX_LABEL[fxMode()] + '</button></div>';
   $$('.cls-btn', el).forEach(function(b){ b.onclick = function(){ LOGIN.cls = b.dataset.cls; LOGIN.q = ''; renderLogin(); setTimeout(function(){ var n = $('#nameStep'); if (n) n.scrollIntoView({behavior:'smooth', block:'start'}); }, 80); }; });
   var si = $('#nameSearch'); if (si) si.oninput = function(){ LOGIN.q = si.value; drawNames(); };
   $('#admBtn').onclick = function(){ Admin.open(); };
-  $('#fxBtn').onclick = function(){ setLowFx(!document.body.classList.contains('lowfx')); renderLogin(); };
+  $('#fxBtn').onclick = function(){ cycleFx(); renderLogin(); };
   drawNames(); show('scr-login');
 }
 function drawNames(){
@@ -1209,7 +1389,7 @@ function ringSVG(pct, size, col){
 }
 function examState(){ return APP.me ? lsGet('ptq_exam_' + APP.me.key, null) : null; }
 function renderHub(){
-  var el = $('#scr-hub'), me = APP.me, best = (APP.live && APP.live.best) || {}, enabled = S('missions').split(',');
+  var el = $('#scr-hub'), me = APP.me, best = (APP.live && APP.live.best) || {}, enabled = enabledMissions();
   var pass = Number(S('passPct')), maxA = Number(S('examAttempts')), used = Number(APP.live.examAttempts || 0);
   var left = maxA > 0 ? Math.max(0, maxA - used) : '∞', es = examState();
   var html = '<div class="topbar glass"><div class="me"><div class="avatar">' + esc(me.name.charAt(0)) + '</div><div><b>' + esc(me.name) + '</b><small>ม.' + esc(me.cls) + ' · เลขที่ ' + esc(me.no) + (IS_IOS ? ' · 📱 iPad' : '') + '</small></div></div>' +
@@ -1241,11 +1421,11 @@ function renderHub(){
   el.innerHTML = html;
   $$('.mcard', el).forEach(function(c){
     c.onclick = function(){ startPractice(c.dataset.m); };
-    if (!IS_IOS) c.onpointermove = function(e){ if (document.body.classList.contains('lowfx')) return; var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.transform = 'perspective(800px) rotateY(' + (x * 14) + 'deg) rotateX(' + (-y * 14) + 'deg) translateY(-6px) scale(1.02)'; c.style.setProperty('--mx', ((x + .5) * 100) + '%'); c.style.setProperty('--my', ((y + .5) * 100) + '%'); };
+    if (!IS_TOUCH) c.onpointermove = function(e){ if (document.body.classList.contains('lowfx')) return; var r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; c.style.transform = 'perspective(800px) rotateY(' + (x * 14) + 'deg) rotateX(' + (-y * 14) + 'deg) translateY(-6px) scale(1.02)'; c.style.setProperty('--mx', ((x + .5) * 100) + '%'); c.style.setProperty('--my', ((y + .5) * 100) + '%'); };
     c.onpointerleave = function(){ c.style.transform = ''; };
   });
   $('#outBtn').onclick = logout; $('#guideBtn').onclick = showGuide;
-  $('#fxBtn2').onclick = function(){ setLowFx(!document.body.classList.contains('lowfx')); toast(document.body.classList.contains('lowfx') ? 'โหมดประหยัด: ปิดเอฟเฟกต์พื้นหลัง' : 'เปิดเอฟเฟกต์เต็ม ✨'); };
+  $('#fxBtn2').onclick = cycleFx;
   $('#admBtn2').onclick = function(){ Admin.open(); };
   if ($('#examBtn')) $('#examBtn').onclick = examGate;
   if ($('#resumeExam')) $('#resumeExam').onclick = resumeExam;
@@ -1511,7 +1691,7 @@ function reportProgress(){
 }
 function correctText(q){
   switch (q.t){
-    case 'mc': case 'dlg': case 'tl': return q.o[q.a];
+    case 'mc': case 'voc': case 'dlg': case 'tl': return q.o[q.a];
     case 'bank': return q.a.join(' / ');
     case 'type': return q.a[0];
     case 'spot': return '"' + q.c[q.a] + '" → ' + q.fix;
@@ -1574,7 +1754,7 @@ R.mc = function(q, host, ready, rng){
     reveal:function(){ this.lock(); btns.forEach(function(b){ var k = Number(b.dataset.k); if (ord[k] === q.a) b.classList.add('right'); else if (k === sel) b.classList.add('wrong'); }); }
   };
 };
-R.dlg = R.mc; R.tl = R.mc;
+R.dlg = R.mc; R.tl = R.mc; R.voc = R.mc;
 R.bank = function(q, host, ready, rng){
   var parts = String(q.q).split('___'), nb = parts.length - 1, fill = [], focus = 0, locked = false;
   for (var i = 0; i < nb; i++) fill.push(-1);
@@ -1928,7 +2108,7 @@ var Admin = {
       var un = self.unreadFor(s.key), v = l ? Number(l.violations || 0) : 0;
       return '<tr id="row-' + cssId(s.key) + '"><td><b>' + esc(s.no) + '</b></td><td>' + esc(s.name) + (l && l.ipad ? ' <span title="iPad">📱</span>' : '') + '</td><td>' + esc(s.cls) + '</td>' +
         '<td><span class="st ' + cls + '">' + esc(label) + '</span></td><td>' + (l ? esc(l.mission || '-') : '-') + '</td><td>' + (l ? esc(l.progress || '-') : '-') + '</td><td>' + (l && l.score !== '' ? esc(l.score) : '-') + '</td>' +
-        '<td title="' + esc(bestTip) + '">' + (l ? passed + '/6 ✓' : '-') + '</td>' +
+        '<td title="' + esc(bestTip) + '">' + (l ? passed + '/' + MISSIONS.length + ' ✓' : '-') + '</td>' +
         '<td>' + (l && l.examScore !== '' && l.examScore != null ? '<b style="color:var(--gold)">' + esc(l.examScore) + '/' + esc(l.examTotal || 30) + '</b>' : '-') + (l && Number(l.examAttempts) ? ' <small style="color:var(--muted)">(' + esc(l.examAttempts) + ' ครั้ง)</small>' : '') + '</td>' +
         '<td>' + (v ? '<span class="vbad">⚠ ' + v + '</span>' : '0') + '</td>' +
         '<td>' + (l && l.face ? '<button class="btn xs ghost" data-face="' + esc(s.key) + '" title="' + esc(l.faceTs) + '">📷</button>' : (l && l.faceTs ? '<span title="' + esc(l.faceTs) + '">🔑</span>' : '-')) + '</td>' +
@@ -2068,7 +2248,7 @@ var Admin = {
       if (!s){ b.innerHTML = 'โหลดไม่สำเร็จ'; return; }
       var sw = function(k, t, d){ return '<div class="set"><div class="set-row"><div><h4>' + t + '</h4><p>' + d + '</p></div><label class="switch"><input type="checkbox" data-k="' + k + '" ' + (s[k] === '1' ? 'checked' : '') + '><span></span></label></div></div>'; };
       var tx = function(k, t, d, type){ return '<div class="set"><h4>' + t + '</h4><p>' + d + '</p><input class="input" data-k="' + k + '" type="' + (type || 'text') + '" value="' + esc(s[k]) + '"></div>'; };
-      var ms = String(s.missions || '').split(',');
+      var ms = (String(s.missions || '').indexOf('~v2') < 0 ? String(s.missions || '').split(',').concat(NEW_MISSIONS) : String(s.missions || '').split(','));
       b.innerHTML = '<div class="toolbar"><button class="btn green" id="saveSet">💾 บันทึกการตั้งค่า</button>' + (self.sheetUrl ? '<a class="btn ghost" target="_blank" rel="noopener" href="' + esc(self.sheetUrl) + '">📗 เปิด Google Sheet (แก้รายชื่อใน Roster)</a>' : '') + '<span style="color:var(--muted);font-size:13px">นักเรียนจะได้รับการตั้งค่าใหม่อัตโนมัติภายในไม่กี่วินาที</span></div>' +
         '<h3>🛡️ ระบบป้องกันทุจริต</h3><div class="set-grid">' +
         sw('acExam', '🛡️ ป้องกันทุจริต — สอบจริง', 'ตรวจจับสลับแท็บ/แอป, ออกจากเต็มจอ, คัดลอก-วาง, ปุ่มลัด, แปลภาษา') +
@@ -2086,7 +2266,7 @@ var Admin = {
       $('#saveSet').onclick = function(){
         var patch = {};
         $$('[data-k]', b).forEach(function(i){ patch[i.dataset.k] = i.type === 'checkbox' ? (i.checked ? '1' : '0') : i.value.trim(); });
-        patch.missions = $$('[data-mis]', b).filter(function(i){ return i.checked; }).map(function(i){ return i.dataset.mis; }).join(',');
+        patch.missions = $$('[data-mis]', b).filter(function(i){ return i.checked; }).map(function(i){ return i.dataset.mis; }).concat(['~v2']).join(',');
         if (!/^\d{4,8}$/.test(patch.pin)){ toast('รหัสครูต้องเป็นตัวเลข 4–8 หลัก', 'err'); return; }
         var newPin = patch.pin; this.disabled = true; var bt = this;
         self.call('saveSettings', {patch:patch}).then(function(r){ bt.disabled = false; if (!r.ok){ toast('บันทึกไม่สำเร็จ: ' + r.error, 'err'); return; }
@@ -2163,7 +2343,7 @@ var Fireworks = (function(){
   var cv = document.createElement('canvas'); cv.style.cssText = 'position:fixed;inset:0;z-index:49;pointer-events:none'; document.body.appendChild(cv); var g = cv.getContext('2d'), rockets = [], sparks = [], until = 0, raf = null, last = 0;
   var COLORS = ['#ff4fd8', '#7c5cff', '#22d3ee', '#ffd166', '#2ee59d', '#ffffff'];
   function launch(){ rockets.push({x:innerWidth * (.15 + Math.random() * .7), y:innerHeight + 10, vy:-(innerHeight * .016 + Math.random() * 4), c:COLORS[Math.floor(Math.random() * COLORS.length)], ty:innerHeight * (.15 + Math.random() * .3)}); }
-  function boom(x, y, c){ var n = 70 + Math.floor(Math.random() * 40); for (var i = 0; i < n; i++){ var a = Math.random() * 6.283, v = Math.random() * 6 + 1.5; sparks.push({x:x, y:y, vx:Math.cos(a) * v, vy:Math.sin(a) * v, life:1, c:Math.random() < .2 ? '#fff' : c}); } }
+  function boom(x, y, c){ var n = document.body.classList.contains('lite') ? 40 : 70 + Math.floor(Math.random() * 40); for (var i = 0; i < n; i++){ var a = Math.random() * 6.283, v = Math.random() * 6 + 1.5; sparks.push({x:x, y:y, vx:Math.cos(a) * v, vy:Math.sin(a) * v, life:1, c:Math.random() < .2 ? '#fff' : c}); } }
   function step(t){
     if (cv.width !== innerWidth) { cv.width = innerWidth; cv.height = innerHeight; }
     g.globalCompositeOperation = 'destination-out'; g.fillStyle = 'rgba(0,0,0,.22)'; g.fillRect(0, 0, cv.width, cv.height); g.globalCompositeOperation = 'lighter';
@@ -2192,7 +2372,7 @@ var Fireworks = (function(){
 
 /* hero parallax */
 addEventListener('pointermove', function(e){
-  if (!fxOn()) return;
+  if (!fxOn() || e.pointerType !== 'mouse' || document.body.classList.contains('lite')) return;
   var h = document.getElementById('heroEl'); if (!h) return;
   var x = e.clientX / innerWidth - .5, y = e.clientY / innerHeight - .5;
   h.style.transform = 'perspective(1200px) rotateY(' + (x * 4) + 'deg) rotateX(' + (-y * 4) + 'deg)';

@@ -524,6 +524,117 @@ body.lowfx .qcard::before,body.lowfx .mcard .mborder::before{animation:none}
 body.lowfx h1.title .ch{animation:none;filter:none}
 @media (prefers-reduced-motion:reduce){#intro,.stamp,.shock,.countdown{display:none!important}}
 
+/* ================= FX LAYER 2: extra grandeur ================= */
+/* floating 3D wireframe objects */
+#floaters{position:fixed;inset:0;z-index:1;pointer-events:none;perspective:900px;overflow:hidden}
+.cube{position:absolute;width:var(--s);height:var(--s);transform-style:preserve-3d;animation:cubeSpin var(--d) linear infinite,floatY calc(var(--d)*.6) ease-in-out infinite alternate}
+.cube i{position:absolute;inset:0;border:1.5px solid var(--c);background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,transparent),transparent);box-shadow:0 0 18px color-mix(in srgb,var(--c) 45%,transparent),inset 0 0 18px color-mix(in srgb,var(--c) 30%,transparent)}
+.cube i:nth-child(1){transform:translateZ(calc(var(--s)/2))}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(3){transform:rotateY(90deg) translateZ(calc(var(--s)/2))}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--s)/2))}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s)/2))}
+.torus{position:absolute;width:var(--s);height:var(--s);transform-style:preserve-3d;animation:cubeSpin var(--d) linear infinite reverse,floatY calc(var(--d)*.5) ease-in-out infinite alternate}
+.torus i{position:absolute;inset:0;border-radius:50%;border:2px solid var(--c);box-shadow:0 0 16px var(--c)}
+.torus i:nth-child(2){transform:rotateY(60deg)}.torus i:nth-child(3){transform:rotateY(120deg)}
+@keyframes cubeSpin{from{transform:rotateX(0) rotateY(0) rotateZ(0)}to{transform:rotateX(360deg) rotateY(720deg) rotateZ(360deg)}}
+@keyframes floatY{from{translate:0 -30px}to{translate:0 40px}}
+body.lowfx #floaters{display:none}
+
+/* living buttons */
+.btn{background-size:200% 200%!important;animation:btnFlow 6s ease infinite}
+.btn.ghost{animation:none}
+@keyframes btnFlow{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.btn:not(.ghost):not(:disabled):hover{box-shadow:0 0 0 3px rgba(255,255,255,.18),0 16px 40px -8px rgba(255,79,216,.85)}
+
+/* loading */
+#scr-load .portal{width:200px;height:200px;filter:drop-shadow(0 0 30px rgba(255,79,216,.6))}
+#scr-load .brand{font-size:16px;letter-spacing:6px;background:linear-gradient(90deg,var(--muted),#fff,var(--muted));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 2s linear infinite}
+
+/* HUD corner brackets */
+.hud{position:relative}
+.hud > .hc{position:absolute;width:26px;height:26px;pointer-events:none;z-index:3;border:3px solid var(--c3);filter:drop-shadow(0 0 6px var(--c3))}
+.hud > .hc.tl{top:10px;left:10px;border-right:0;border-bottom:0;border-top-left-radius:10px}
+.hud > .hc.tr{top:10px;right:10px;border-left:0;border-bottom:0;border-top-right-radius:10px;border-color:var(--c1);filter:drop-shadow(0 0 6px var(--c1))}
+.hud > .hc.bl{bottom:10px;left:10px;border-right:0;border-top:0;border-bottom-left-radius:10px;border-color:var(--c1);filter:drop-shadow(0 0 6px var(--c1))}
+.hud > .hc.br{bottom:10px;right:10px;border-left:0;border-top:0;border-bottom-right-radius:10px}
+.hero.hud > .hc{animation:hcPulse 2.4s ease-in-out infinite}
+@keyframes hcPulse{50%{opacity:.35}}
+
+/* class buttons: planets */
+.cls-btn{padding:30px 10px 24px}
+.cls-btn .planet{display:block;width:58px;height:58px;margin:0 auto 8px;border-radius:50%;position:relative;
+  background:radial-gradient(circle at 30% 30%,#fff,var(--pc) 35%,#130b36 85%);box-shadow:0 0 30px var(--pc),inset -8px -8px 18px rgba(0,0,0,.5);animation:bob 4s ease-in-out infinite}
+.cls-btn .planet::after{content:"";position:absolute;left:-30%;right:-30%;top:42%;height:16%;border-radius:50%;border:2px solid rgba(255,255,255,.55);transform:rotate(-18deg);box-shadow:0 0 12px rgba(255,255,255,.4)}
+.cls-btn:hover .planet{animation-duration:1.2s}
+
+/* names: avatar orbs */
+.name-btn{padding:12px 16px;border-radius:18px}
+.name-btn .no{position:relative;border-radius:50%;min-width:46px;height:46px;background:#120d33;isolation:isolate}
+.name-btn .no::before{content:"";position:absolute;inset:-3px;border-radius:50%;z-index:-1;background:conic-gradient(var(--c3),var(--c2),var(--c1),var(--gold),var(--c3));animation:spin 4s linear infinite}
+.name-btn .no::after{content:"";position:absolute;inset:0;border-radius:50%;z-index:-1;background:#140e38}
+.name-btn:hover{transform:translateY(-3px) scale(1.02)}
+
+/* topic watermark */
+.topic-head{position:relative}
+.topic-head::before{content:attr(data-t);position:absolute;right:2%;top:-60px;font-size:180px;font-weight:900;line-height:1;color:transparent;-webkit-text-stroke:2px rgba(124,92,255,.22);pointer-events:none;z-index:-1}
+
+/* play HUD */
+.playbar{border:1px solid rgba(34,211,238,.35);box-shadow:0 0 0 1px rgba(255,79,216,.15),0 10px 40px -10px rgba(34,211,238,.45)}
+.playbar .ttl{font-size:17px}
+.prog{height:12px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 18px,rgba(255,255,255,.03) 18px 20px)}
+.qtype .tbadge{background:linear-gradient(135deg,var(--c2),var(--c1));border:0;box-shadow:0 0 18px rgba(255,79,216,.5);color:#fff}
+.qtext{text-shadow:0 2px 20px rgba(124,92,255,.35)}
+.qnum{font-size:15px;padding:4px 12px;border-radius:99px;background:rgba(0,0,0,.35);border:1px solid var(--line);color:#fff}
+
+/* options: neon tiles */
+.opt{isolation:isolate;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));border:2px solid rgba(255,255,255,.12);border-radius:20px;min-height:72px}
+.opt::before{content:"";position:absolute;inset:0;z-index:-1;opacity:0;transition:opacity .25s;background:radial-gradient(circle at 0% 50%,rgba(34,211,238,.35),transparent 60%)}
+.opt:hover:not(:disabled)::before,.opt.sel::before{opacity:1}
+.opt .k{border-radius:50%;width:42px;height:42px;min-width:42px;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.35),rgba(124,92,255,.5) 60%);box-shadow:0 0 14px rgba(124,92,255,.6);font-size:17px}
+.opt:hover:not(:disabled){transform:translateY(-4px) scale(1.01)}
+.opt.sel{background:linear-gradient(160deg,rgba(34,211,238,.25),rgba(124,92,255,.12))}
+.opt.sel .k{background:radial-gradient(circle at 30% 30%,#fff,var(--c3) 60%);box-shadow:0 0 20px var(--c3)}
+.chip{border-radius:16px;box-shadow:0 6px 16px -8px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.25)}
+.chip:hover{box-shadow:0 0 0 2px rgba(34,211,238,.6),0 10px 20px -6px rgba(34,211,238,.6)}
+.bub{box-shadow:0 10px 30px -12px rgba(0,0,0,.8)}
+.bub.A{background:linear-gradient(135deg,rgba(124,92,255,.38),rgba(124,92,255,.14))}
+.bub.B{background:linear-gradient(135deg,rgba(255,79,216,.32),rgba(255,79,216,.1))}
+.tlwrap{background:radial-gradient(ellipse at 70% 50%,rgba(255,209,102,.08),transparent 60%),rgba(0,0,0,.35);box-shadow:inset 0 0 40px rgba(124,92,255,.2)}
+.fb{position:relative;overflow:hidden}
+.fb::after{content:"";position:absolute;top:0;left:-40%;width:30%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.18),transparent);transform:skewX(-20deg);animation:sweep 2.6s ease-in-out infinite}
+
+/* modals: neon portal frame */
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+.modal{border:2px solid transparent;background:radial-gradient(ellipse at top,rgba(124,92,255,.35),transparent 60%) padding-box,linear-gradient(160deg,#1d1650,#0d0a25) padding-box,conic-gradient(from var(--ang),var(--c3),var(--c2),var(--c1),var(--gold),var(--c3)) border-box;animation:mIn .4s cubic-bezier(.2,.9,.3,1.2),angSpin 5s linear infinite;box-shadow:0 0 60px -10px rgba(124,92,255,.7),0 40px 100px -20px #000}
+.warn-modal .modal{background:radial-gradient(ellipse at top,rgba(255,31,90,.35),transparent 60%) padding-box,linear-gradient(160deg,#3a0f22,#160818) padding-box,conic-gradient(from var(--ang),#ff1f5a,#ff8a00,#ff1f5a,#7c0033,#ff1f5a) border-box;animation:mIn .4s,angSpin 1.6s linear infinite}
+@keyframes angSpin{to{--ang:360deg}}
+.popmsg .bigmsg{background:linear-gradient(135deg,rgba(124,92,255,.35),rgba(34,211,238,.18));box-shadow:inset 0 0 30px rgba(124,92,255,.3)}
+.chat-fab::before{content:"";position:absolute;inset:-6px;border-radius:999px;border:2px solid rgba(34,211,238,.6);animation:fabRing 2s ease-out infinite;pointer-events:none}
+@keyframes fabRing{from{transform:scale(.95);opacity:1}to{transform:scale(1.25);opacity:0}}
+.chat-panel{border:1px solid rgba(34,211,238,.45);box-shadow:0 0 40px -10px rgba(34,211,238,.6),0 30px 80px -20px #000}
+
+/* exam card sparkle */
+.exam-card .gold-dust{position:absolute;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.exam-card .gold-dust i{position:absolute;bottom:-10px;width:4px;height:4px;border-radius:50%;background:var(--gold);box-shadow:0 0 10px var(--gold);animation:dust linear infinite}
+@keyframes dust{to{transform:translateY(-260px);opacity:0}}
+.exam-card .sweep{position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(255,230,160,.22) 50%,transparent 65%);background-size:250% 100%;animation:sweep2 4s ease-in-out infinite}
+@keyframes sweep2{from{background-position:150% 0}to{background-position:-100% 0}}
+
+/* result: orbiting particles around ring */
+.bigring .orbitp{position:absolute;inset:-14px;border-radius:50%;animation:spin 6s linear infinite;pointer-events:none}
+.bigring .orbitp::before,.bigring .orbitp::after{content:"";position:absolute;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 16px var(--c3),0 0 30px var(--c3)}
+.bigring .orbitp::before{top:-6px;left:50%}.bigring .orbitp::after{bottom:-6px;left:50%;box-shadow:0 0 16px var(--c1),0 0 30px var(--c1)}
+.bigring .val{text-shadow:0 0 30px rgba(124,92,255,.8)}
+
+/* admin panel: mission-control look */
+#admin{background:radial-gradient(ellipse at 20% -10%,#3b1d7a,transparent 50%),radial-gradient(ellipse at 90% 10%,#5a1252,transparent 45%),#07061a}
+.adm-top{border-bottom:1px solid rgba(34,211,238,.35);box-shadow:0 10px 30px -15px rgba(34,211,238,.5)}
+.tab.on{box-shadow:0 0 22px rgba(255,79,216,.6)}
+.stat{position:relative;overflow:hidden;background:linear-gradient(160deg,rgba(124,92,255,.22),rgba(255,255,255,.03));border:1px solid rgba(124,92,255,.35)}
+.stat::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.35),transparent 70%)}
+.stat b{font-size:34px;background:linear-gradient(180deg,#fff,#b9a8ff);-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(124,92,255,.6))}
+.tbl th{background:linear-gradient(180deg,#221a55,#16113a)}
+.set{background:linear-gradient(160deg,rgba(124,92,255,.14),rgba(255,255,255,.03))}
+
 </style>
 </head>
 <body>
@@ -809,7 +920,7 @@ document.addEventListener('pointerdown', function(e){
 
 /* ---------------- background particles ---------------- */
 var FX = (function(){
-  var cv = $('#fx'), g = cv.getContext('2d'), W, H, cx, cy, stars = [], speed = 1.2, target = 1.2, warpT = 0, run = true, dpr = Math.min(window.devicePixelRatio || 1, 1.5), mx = 0, my = 0, pmx = 0, pmy = 0;
+  var vt = 0, cv = $('#fx'), g = cv.getContext('2d'), W, H, cx, cy, stars = [], speed = 1.2, target = 1.2, warpT = 0, run = true, dpr = Math.min(window.devicePixelRatio || 1, 1.5), mx = 0, my = 0, pmx = 0, pmy = 0;
   var HUES = [290, 260, 190, 45, 320];
   function mk(far){ return {x:(Math.random() - .5) * W * 2, y:(Math.random() - .5) * H * 2, z:far ? W : Math.random() * W, pz:0, h:HUES[Math.floor(Math.random() * HUES.length)]}; }
   function init(){ W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; cx = W / 2; cy = H / 2; stars = [];
@@ -821,6 +932,9 @@ var FX = (function(){
     speed += (target - speed) * .06; pmx += (mx - pmx) * .05; pmy += (my - pmy) * .05;
     g.fillStyle = speed > 6 ? 'rgba(7,6,26,.35)' : 'rgba(7,6,26,1)'; g.fillRect(0, 0, W, H);
     var ox = cx - pmx * 40 * dpr, oy = cy - pmy * 40 * dpr, streak = speed > 3;
+    vt += .0025 * speed; g.lineWidth = 1.5 * dpr;
+    for (var vi = 0; vi < 7; vi++){ var ph = ((vi / 7) + vt) % 1, rr = Math.pow(ph, 2.2) * Math.max(W, H) * .9, al = Math.sin(ph * Math.PI) * .22;
+      g.strokeStyle = 'hsla(' + (260 + vi * 22) % 360 + ',100%,70%,' + al + ')'; g.beginPath(); g.ellipse(ox, oy, rr, rr * .62, vt * .6 + vi * .4, 0, 6.283); g.stroke(); }
     for (var i = 0; i < stars.length; i++){
       var s = stars[i]; s.pz = s.z; s.z -= speed * dpr;
       if (s.z < 1){ var n = mk(true); n.pz = n.z; stars[i] = n; continue; }
@@ -1018,8 +1132,8 @@ function splitTitle(t){ return Array.from(String(t)).map(function(c, i){ return 
 function heroHTML(compact){
   var h = slotUrl('hero');
   var gl = ['have + V3', 'have been + V-ing', 'V2', 'since 2020', 'for 3 years', 'two days ago', 'yet?', 'already', 'ever', 'just', 'so far', 'How long…?', 'How many…?', 'last night'];
-  var glyphs = '<div class="glyphs">' + gl.map(function(t, i){ return '<span style="left:' + ((i * 37) % 92 + 2) + '%;top:' + (40 + (i * 23) % 55) + '%;animation-duration:' + (9 + (i % 5) * 2) + 's;animation-delay:-' + (i * 1.3) + 's">' + esc(t) + '</span>'; }).join('') + '</div>';
-  return '<div class="hero glass" id="heroEl">' + (h ? '<div class="himg" style="background-image:' + bgUrl(h) + '"></div>' : '') + '<div class="aurora"></div><div class="beams"><i></i><i></i><i></i><i></i></div>' + glyphs +
+  var glyphs = '<div class="glyphs">' + gl.map(function(t, i){ return '<span style="left:' + (i % 2 ? 72 + (i * 7) % 20 : 2 + (i * 5) % 18) + '%;top:' + (40 + (i * 23) % 55) + '%;animation-duration:' + (9 + (i % 5) * 2) + 's;animation-delay:-' + (i * 1.3) + 's">' + esc(t) + '</span>'; }).join('') + '</div>';
+  return '<div class="hero glass hud" id="heroEl"><i class="hc tl"></i><i class="hc tr"></i><i class="hc bl"></i><i class="hc br"></i>' + (h ? '<div class="himg" style="background-image:' + bgUrl(h) + '"></div>' : '') + '<div class="aurora"></div><div class="beams"><i></i><i></i><i></i><i></i></div>' + glyphs +
     (compact ? '' : '<div class="orbit-wrap"><div class="clock-halo"></div><div class="orbit o2"></div>' + clockSVG() + '<div class="orbit o1"></div></div>') +
     '<div class="brand">Basic English Course · By T.OAT · Thanakhan-oomsin School</div>' +
     '<h1 class="title fx-title">' + splitTitle(S('title')) + '</h1><div class="subtitle">' + esc(S('subtitle')) + '</div>' +
@@ -1039,7 +1153,7 @@ function renderLogin(){
     (APP.roster.length ? '' : '<div class="glass" style="padding:22px;text-align:center">⚠️ ยังไม่มีรายชื่อนักเรียน — ครูกรุณาใส่รายชื่อในชีต <b>Roster</b> (ชื่อ | นามสกุล | ชั้น | เลขที่)</div>') +
     '<div class="step-title"><span class="n">1</span>เลือกชั้นเรียนของฉัน</div><div class="cls-row">' +
     classes.map(function(c){ var n = APP.roster.filter(function(s){ return s.cls === c; }).length;
-      return '<button class="cls-btn glass ' + (LOGIN.cls === c ? 'on' : '') + '" data-cls="' + esc(c) + '"><b>ม.' + esc(c) + '</b><small>👥 ' + n + ' คน</small></button>'; }).join('') + '</div>' +
+      return '<button class="cls-btn glass ' + (LOGIN.cls === c ? 'on' : '') + '" data-cls="' + esc(c) + '"><span class="planet" style="--pc:' + ['#ff4fd8', '#22d3ee', '#ffd166', '#7c5cff', '#2ee59d'][classes.indexOf(c) % 5] + ';animation-delay:-' + classes.indexOf(c) + 's"></span><b>ม.' + esc(c) + '</b><small>👥 ' + n + ' คน</small></button>'; }).join('') + '</div>' +
     '<div id="nameStep" class="' + (LOGIN.cls ? '' : 'hidden') + '"><div class="step-title"><span class="n">2</span>แตะชื่อของฉัน</div>' +
     '<input class="input" id="nameSearch" placeholder="🔎 ค้นหาชื่อหรือเลขที่…" style="margin-bottom:12px" value="' + esc(LOGIN.q) + '"><div class="names" id="names"></div></div>' +
     '<div class="footer">© ' + new Date().getFullYear() + ' T.OAT · <button type="button" id="admBtn">🔐 สำหรับครู</button> · <button type="button" id="fxBtn">✨ เอฟเฟกต์: ' + (document.body.classList.contains('lowfx') ? 'ประหยัด' : 'เต็ม') + '</button></div>';
@@ -1105,7 +1219,7 @@ function renderHub(){
   ['A', 'B'].forEach(function(t){
     var ms = MISSIONS.filter(function(m){ return m.topic === t && enabled.indexOf(m.id) >= 0; });
     if (!ms.length) return;
-    html += '<div class="topic-head"><div><div class="tag">TOPIC ' + t + '</div><h2 class="grad-text">' + esc(TOPICS[t].name) + '</h2></div><span class="pill">' + ms.length + ' ด่าน · ทำซ้ำได้ไม่จำกัด</span></div><div class="mgrid">';
+    html += '<div class="topic-head" data-t="' + t + '"><div><div class="tag">TOPIC ' + t + '</div><h2 class="grad-text">' + esc(TOPICS[t].name) + '</h2></div><span class="pill">' + ms.length + ' ด่าน · ทำซ้ำได้ไม่จำกัด</span></div><div class="mgrid">';
     ms.forEach(function(m, i){
       var b = best[m.id], cover = slotUrl(m.id);
       var types = {}; BANK[m.id].forEach(function(q){ types[q.t] = 1; });
@@ -1117,7 +1231,8 @@ function renderHub(){
     html += '</div>';
   });
   var ecover = slotUrl('EXAM'), done = APP.live.examDone, closed = !on('examOpen');
-  html += '<div class="exam-card"><div class="cover" style="background-image:' + bgUrl(ecover) + '"></div><div><div class="tag">🏆 FINAL EXAM · สอบจริง</div><h2 class="grad-text"><span class="trophy">🏆</span>Perfect Tense Final Challenge</h2>' +
+  var dust = ''; for (var di = 0; di < 18; di++) dust += '<i style="left:' + ((di * 53) % 100) + '%;animation-duration:' + (3 + di % 4) + 's;animation-delay:-' + (di * .37).toFixed(2) + 's"></i>';
+  html += '<div class="exam-card"><div class="cover" style="background-image:' + bgUrl(ecover) + '"></div><div class="gold-dust">' + dust + '</div><div class="sweep"></div><div><div class="tag">🏆 FINAL EXAM · สอบจริง</div><div style="display:flex;align-items:center;gap:14px"><span class="trophy">🏆</span><h2 class="grad-text">Perfect Tense Final Challenge</h2></div>' +
     '<div style="color:#f6e7c8">30 ข้อ · รวมทั้ง 2 เรื่อง · ' + (Number(S('examTime')) ? 'เวลา ' + S('examTime') + ' นาที' : 'ไม่จำกัดเวลา') + ' · เกณฑ์ผ่าน ' + pass + '%</div>' +
     '<div class="chips">' + (on('faceScan') ? '<span class="pill">📷 สแกนหน้า</span>' : '') + (on('acExam') ? '<span class="pill">🛡️ ป้องกันทุจริต</span>' : '') + (on('acExam') && IS_IOS && on('ipadLenient') ? '<span class="pill">📱 โหมดผ่อนปรน iPad</span>' : '') +
     '<span class="pill">สิทธิ์สอบคงเหลือ: ' + left + '</span>' + (APP.live.examScore != null && done ? '<span class="pill" style="color:var(--gold)">คะแนนสูงสุด ' + APP.live.examScore + '/' + (APP.live.examTotal || 30) + '</span>' : '') + '</div></div>' +
@@ -1361,7 +1476,7 @@ function renderQ(){
   $('#progBar').style.width = (GAME.i / n * 100) + '%';
   if (!ex){ $('#scorePill').textContent = '⭐ ' + GAME.score + '/' + GAME.i; }
   var w = $('#qwrap');
-  w.innerHTML = '<div class="qcard glass" translate="no"><div class="scanline"></div><div class="qtype"><span class="tbadge">' + TYPE_ICON[q.t] + ' ' + TYPE_NAME[q.t] + '</span><span class="lv" title="ระดับ">' + '★★★'.slice(0, q.lv || 1) + '<span style="opacity:.25">' + '★★★'.slice(0, 3 - (q.lv || 1)) + '</span></span><span class="qnum">ข้อ ' + (GAME.i + 1) + ' / ' + n + '</span></div>' +
+  w.innerHTML = '<div class="qcard glass hud" translate="no"><i class="hc tl"></i><i class="hc tr"></i><i class="hc bl"></i><i class="hc br"></i><div class="scanline"></div><div class="qtype"><span class="tbadge">' + TYPE_ICON[q.t] + ' ' + TYPE_NAME[q.t] + '</span><span class="lv" title="ระดับ">' + '★★★'.slice(0, q.lv || 1) + '<span style="opacity:.25">' + '★★★'.slice(0, 3 - (q.lv || 1)) + '</span></span><span class="qnum">ข้อ ' + (GAME.i + 1) + ' / ' + n + '</span></div>' +
     '<div class="hint">💡 ' + TYPE_HINT[q.t] + '</div><div id="qhost"></div><div class="actbar"><button class="btn" id="checkBtn" disabled>' + (ex ? 'ยืนยันคำตอบ ✓' : 'ตรวจคำตอบ ✓') + '</button></div><div id="fbHost"></div></div>';
   GAME.stage = 'answer';
   var btn = $('#checkBtn');
@@ -1595,7 +1710,7 @@ function renderResult(res){
   var rank = res.pct >= 90 ? 'LEGENDARY RANK' : res.pct >= 75 ? 'EPIC RANK' : res.pass ? 'GREAT RANK' : 'KEEP GOING';
   el.innerHTML = '<div class="glass result"><div class="rays' + (res.pass ? '' : ' fail') + '"></div><div class="trophy-big">' + (res.pct >= 90 ? '🏆' : res.pct >= 75 ? '🥇' : res.pass ? '🎖️' : '💪') + '</div><div class="rank">★ ' + rank + ' ★</div><div class="brand">' + (ex ? '🏆 FINAL EXAM' : 'MISSION ' + esc(res.mission)) + ' · ' + esc(res.title) + '</div>' +
     '<h2 style="font-size:clamp(26px,5vw,40px);margin:8px 0" class="grad-text">' + (res.pass ? (stars === 3 ? 'LEGENDARY! 🏆' : 'ผ่านแล้ว! เก่งมาก 🎉') : 'สู้ต่อนะ! 💪') + '</h2>' +
-    '<div class="bigring"><svg viewBox="0 0 200 200"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#7c5cff"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs><circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="16"/><circle id="rr" cx="100" cy="100" r="88" fill="none" stroke="url(#rg)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 ' + circ + '" style="transition:stroke-dasharray 1.6s cubic-bezier(.2,.8,.2,1)"/></svg><div class="val"><div><span id="cnt">0</span>/' + res.total + '<small>' + res.pct + '% · เกณฑ์ ' + S('passPct') + '%</small></div></div></div>' +
+    '<div class="bigring"><svg viewBox="0 0 200 200"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset=".5" stop-color="#7c5cff"/><stop offset="1" stop-color="#ff4fd8"/></linearGradient></defs><circle cx="100" cy="100" r="88" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="16"/><circle id="rr" cx="100" cy="100" r="88" fill="none" stroke="url(#rg)" stroke-width="16" stroke-linecap="round" stroke-dasharray="0 ' + circ + '" style="transition:stroke-dasharray 1.6s cubic-bezier(.2,.8,.2,1)"/></svg><div class="orbitp"></div><div class="val"><div><span id="cnt">0</span>/' + res.total + '<small>' + res.pct + '% · เกณฑ์ ' + S('passPct') + '%</small></div></div></div>' +
     '<div class="stars">' + [0, 1, 2].map(function(i){ return '<span style="animation-delay:' + (1.2 + i * .25) + 's;opacity:' + (i < stars ? 1 : .18) + '">⭐</span>'; }).join('') + '</div>' +
     '<div class="chips" style="justify-content:center"><span class="pill">👤 ' + esc(APP.me.name) + '</span><span class="pill">ม.' + esc(APP.me.cls) + ' · เลขที่ ' + esc(APP.me.no) + '</span><span class="pill">⏱ ' + Math.floor(res.dur / 60) + ' นาที ' + (res.dur % 60) + ' วิ</span>' + (res.bestStreak > 1 ? '<span class="pill">🔥 ต่อเนื่อง ' + res.bestStreak + ' ข้อ</span>' : '') + (res.violations ? '<span class="pill vpill">🛡️ เตือน ' + res.violations + ' ครั้ง</span>' : '') + (res.reason === 'timeout' ? '<span class="pill vpill">⏰ หมดเวลา</span>' : '') + (res.reason === 'violation' ? '<span class="pill vpill">⛔ ส่งอัตโนมัติ</span>' : '') + '</div>' +
     '<div class="breakdown">' + Object.keys(bd).map(function(t){ var p = Math.round(bd[t].ok / bd[t].n * 100); return '<div class="b">' + TYPE_ICON[t] + ' <b>' + TYPE_NAME[t] + '</b><span style="float:right">' + bd[t].ok + '/' + bd[t].n + '</span><div class="bar"><i style="width:' + p + '%"></i></div></div>'; }).join('') + '</div>' +
@@ -2100,6 +2215,15 @@ addEventListener('pointermove', function(e){
   function end(){ if (done) return; done = true; d.classList.add('out'); if (window.FX) FX.warp(500, 60); setTimeout(function(){ d.remove(); }, 720); }
   d.addEventListener('click', function(){ SFX.unlock(); end(); });
   setTimeout(end, 3100);
+})();
+
+/* floating 3D wireframe cubes & rings */
+(function(){
+  var f = document.createElement('div'); f.id = 'floaters';
+  var defs = [['cube', 8, 14, 70, '#7c5cff', 34], ['torus', 86, 22, 90, '#ff4fd8', 40], ['cube', 90, 70, 50, '#22d3ee', 28], ['torus', 6, 78, 70, '#ffd166', 36], ['cube', 48, 92, 40, '#ff4fd8', 24]];
+  f.innerHTML = defs.map(function(d){ var faces = d[0] === 'cube' ? '<i></i><i></i><i></i><i></i><i></i><i></i>' : '<i></i><i></i><i></i>';
+    return '<div class="' + d[0] + '" style="left:' + d[1] + '%;top:' + d[2] + '%;--s:' + d[3] + 'px;--c:' + d[4] + ';--d:' + d[5] + 's;opacity:.55">' + faces + '</div>'; }).join('');
+  document.body.insertBefore(f, document.getElementById('app'));
 })();
 
 </script>

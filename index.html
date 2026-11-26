@@ -1171,23 +1171,12 @@ var FX = (function(){
 var FX_MODES = ['full', 'lite', 'low'], FX_LABEL = {full:'เต็ม ✨', lite:'ลื่น ⚡', low:'ประหยัด 🔋'};
 var IS_TOUCH = IS_IOS || /Android|Mobile/i.test(navigator.userAgent) || (window.matchMedia && matchMedia('(pointer:coarse)').matches && !matchMedia('(pointer:fine)').matches);
 function fxMode(){ return document.body.classList.contains('lowfx') ? 'low' : document.body.classList.contains('lite') ? 'lite' : 'full'; }
-function setFxMode(m, save){ document.body.classList.toggle('lowfx', m === 'low'); document.body.classList.toggle('lite', m !== 'full'); if (save) lsSet('ptq_fxmode', m); }
-function setLowFx(v){ setFxMode(v ? 'low' : (IS_TOUCH ? 'lite' : 'full'), true); }
-function cycleFx(){ var m = FX_MODES[(FX_MODES.indexOf(fxMode()) + 1) % 3]; setFxMode(m, true); toast('เอฟเฟกต์: ' + FX_LABEL[m] + (m === 'full' && IS_TOUCH ? ' (อาจทำให้เครื่องร้อน)' : '')); }
-(function(){
-  var m = lsGet('ptq_fxmode', null), legacy = lsGet('ptq_lowfx', null);
-  if (m && FX_MODES.indexOf(m) >= 0 && m !== 'full'){ setFxMode(m); return; }
-  if (m === 'full'){ setFxMode('full'); }
-  if (legacy === true){ setFxMode('low'); return; } // old builds stored 'false' on every device automatically, so only honour an explicit economy choice
-  if (m !== 'full') setFxMode(IS_TOUCH ? 'lite' : 'full');
-  var frames = 0, t0 = 0;
-  function tick(t){ if (!t0) t0 = t; frames++; if (t - t0 < 4000){ requestAnimationFrame(tick); return; }
-    var fps = frames * 1000 / (t - t0); if (document.hidden) return;
-    var cur = fxMode();
-    if (cur === 'full' && fps < 45){ setFxMode('lite'); toast('⚡ ปรับเป็นโหมด "ลื่น" อัตโนมัติ (กด ✨ เพื่อเปลี่ยน)', '', 4000); }
-    else if (cur === 'lite' && fps < 28){ setFxMode('low'); toast('🔋 ปรับเป็นโหมดประหยัดอัตโนมัติ (กด ✨ เพื่อเปลี่ยน)', '', 4000); } }
-  setTimeout(function(){ requestAnimationFrame(tick); }, 1500);
-})();
+// Effects: always start in FULL on every device. Only the student's own tap on ✨ changes it (saved per device under a new key,
+// so settings auto-saved by older versions are ignored).
+var FX_KEY = 'ptq_fx_choice_v3';
+function setFxMode(m, save){ document.body.classList.toggle('lowfx', m === 'low'); document.body.classList.toggle('lite', m !== 'full'); if (save) lsSet(FX_KEY, m); }
+function cycleFx(){ var m = FX_MODES[(FX_MODES.indexOf(fxMode()) + 1) % 3]; setFxMode(m, true); toast('เอฟเฟกต์: ' + FX_LABEL[m]); }
+(function(){ var m = lsGet(FX_KEY, null); setFxMode(m && FX_MODES.indexOf(m) >= 0 ? m : 'full'); })();
 
 function burst(el, color){
   if (document.body.classList.contains('lowfx')) return;

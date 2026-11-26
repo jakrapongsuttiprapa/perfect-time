@@ -1015,12 +1015,13 @@ var DEFAULT_SETTINGS = {
   deviceLock:'1', missions:'A1,A2,A3,B1,B2,B3', slots:'{}', pin:'7846'
 };
 var SLOT_DEF = [
-  {k:'hero', n:'แบนเนอร์หน้าแรก', size:'1600 × 600 px'},
+  {k:'hero', n:'แบนเนอร์หน้าแรก (หน้าเลือกชื่อ)', size:'1920 × 1080 px (16:9)'},
+  {k:'heroHub', n:'แบนเนอร์หน้าเลือกด่าน (หลังเข้าสู่ระบบ)', size:'1920 × 540 px (ภาพกว้างยาว) — ถ้าเว้นว่างจะใช้รูปแบนเนอร์หน้าแรก'},
   {k:'bg', n:'พื้นหลังทั้งเว็บ', size:'1920 × 1080 px'},
   {k:'logo', n:'โลโก้กลางนาฬิกา', size:'512 × 512 px (สี่เหลี่ยมจัตุรัส)'},
-  {k:'A1', n:'ปกด่าน A1', size:'800 × 450 px'}, {k:'A2', n:'ปกด่าน A2', size:'800 × 450 px'}, {k:'A3', n:'ปกด่าน A3', size:'800 × 450 px'}, {k:'A4', n:'ปกด่าน A4', size:'800 × 450 px'}, {k:'A5', n:'ปกด่าน A5', size:'800 × 450 px'}, {k:'A6', n:'ปกด่าน A6', size:'800 × 450 px'},
-  {k:'B1', n:'ปกด่าน B1', size:'800 × 450 px'}, {k:'B2', n:'ปกด่าน B2', size:'800 × 450 px'}, {k:'B3', n:'ปกด่าน B3', size:'800 × 450 px'}, {k:'B4', n:'ปกด่าน B4', size:'800 × 450 px'}, {k:'B5', n:'ปกด่าน B5', size:'800 × 450 px'}, {k:'B6', n:'ปกด่าน B6', size:'800 × 450 px'},
-  {k:'EXAM', n:'ปกสอบจริง', size:'1600 × 500 px'},
+  {k:'A1', n:'ปกด่าน A1', size:'1000 × 720 px'}, {k:'A2', n:'ปกด่าน A2', size:'1000 × 720 px'}, {k:'A3', n:'ปกด่าน A3', size:'1000 × 720 px'}, {k:'A4', n:'ปกด่าน A4', size:'1000 × 720 px'}, {k:'A5', n:'ปกด่าน A5', size:'1000 × 720 px'}, {k:'A6', n:'ปกด่าน A6', size:'1000 × 720 px'},
+  {k:'B1', n:'ปกด่าน B1', size:'1000 × 720 px'}, {k:'B2', n:'ปกด่าน B2', size:'1000 × 720 px'}, {k:'B3', n:'ปกด่าน B3', size:'1000 × 720 px'}, {k:'B4', n:'ปกด่าน B4', size:'1000 × 720 px'}, {k:'B5', n:'ปกด่าน B5', size:'1000 × 720 px'}, {k:'B6', n:'ปกด่าน B6', size:'1000 × 720 px'},
+  {k:'EXAM', n:'ปกสอบจริง', size:'1920 × 440 px (ภาพกว้างยาว)'},
   {k:'cert', n:'พื้นหลังรูปผลคะแนน', size:'1080 × 1350 px (แนวตั้ง)'}
 ];
 var TYPE_NAME = {voc:'คำศัพท์', mc:'เลือกคำตอบ', dlg:'บทสนทนา', tl:'อ่านไทม์ไลน์', bank:'เติมบัตรคำ', type:'พิมพ์คำตอบ', spot:'หาจุดผิด', order:'เรียงประโยค', sort:'จัดหมวดหมู่'};
@@ -1310,7 +1311,7 @@ function clockSVG(){
 }
 function splitTitle(t){ return Array.from(String(t)).map(function(c, i){ return c === ' ' ? '<span class="sp"> </span>' : '<span class="ch" style="--i:' + i + '">' + esc(c) + '</span>'; }).join(''); }
 function heroHTML(compact){
-  var h = slotUrl('hero');
+  var h = compact ? (slotUrl('heroHub') || slotUrl('hero')) : slotUrl('hero');
   var gl = ['have + V3', 'have been + V-ing', 'V2', 'since 2020', 'for 3 years', 'two days ago', 'yet?', 'already', 'ever', 'just', 'so far', 'How long…?', 'How many…?', 'last night'];
   var glyphs = '<div class="glyphs">' + gl.map(function(t, i){ return '<span style="left:' + (i % 2 ? 72 + (i * 7) % 20 : 2 + (i * 5) % 18) + '%;top:' + (40 + (i * 23) % 55) + '%;animation-duration:' + (9 + (i % 5) * 2) + 's;animation-delay:-' + (i * 1.3) + 's">' + esc(t) + '</span>'; }).join('') + '</div>';
   return '<div class="hero glass hud" id="heroEl"><i class="hc tl"></i><i class="hc tr"></i><i class="hc bl"></i><i class="hc br"></i>' + (h ? '<div class="himg" style="background-image:' + bgUrl(h) + '"></div>' : '') + '<div class="aurora"></div><div class="beams"><i></i><i></i><i></i><i></i></div>' + glyphs +

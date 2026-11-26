@@ -639,6 +639,48 @@ body.lowfx #floaters{display:none}
 @media(min-width:1000px){.mgrid{grid-template-columns:repeat(3,1fr)}}
 .mcard{padding-top:96px;min-height:270px}
 
+/* ================= PERFORMANCE PASS: same look, GPU-cheap rendering (applies to every mode) ================= */
+/* 1) no live blur anywhere: glass panels get a solid tinted background instead of backdrop-filter */
+*{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+.glass{background:linear-gradient(160deg,rgba(32,26,80,.92),rgba(16,12,44,.92))}
+.modal-bg{background:rgba(4,3,15,.82)}
+/* 2) colour blobs: pre-softened gradients, no filter, no blend mode; transform-only motion */
+.blobs{filter:none;opacity:.6}
+.blobs i{mix-blend-mode:normal;will-change:transform}
+.blobs i:nth-child(1){background:radial-gradient(circle,rgba(124,92,255,.55) 0,rgba(124,92,255,.18) 35%,transparent 68%)}
+.blobs i:nth-child(2){background:radial-gradient(circle,rgba(255,79,216,.45) 0,rgba(255,79,216,.15) 35%,transparent 68%)}
+.blobs i:nth-child(3){background:radial-gradient(circle,rgba(34,211,238,.4) 0,rgba(34,211,238,.12) 35%,transparent 68%)}
+/* 3) grid floor: static (it repainted a huge masked area every frame) */
+.grid-floor{animation:none}
+/* 4) hero aurora: no blur filter / blend; slow transform-only spin */
+.hero .aurora{filter:none;mix-blend-mode:normal;opacity:.35;will-change:transform}
+/* 5) title: one static gradient per letter + a single shadow on the whole word; letters only bob (transform) */
+h1.title .ch{animation:chBob 3.2s ease-in-out infinite;animation-delay:calc(var(--i)*.09s);filter:none;background-position:calc(var(--i)*35%) 0;will-change:transform}
+h1.title.fx-title{filter:none;position:relative;isolation:isolate}
+h1.title.fx-title::before{content:"";position:absolute;left:8%;right:8%;top:10%;bottom:0;z-index:-1;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,79,216,.35),rgba(124,92,255,.18) 45%,transparent 70%);pointer-events:none}
+h1.title .ch{-webkit-text-stroke:1px rgba(255,255,255,.18)}
+/* 6) spinning conic borders only while hovered (they were 15+ big rotating layers) */
+.mcard .mborder::before,.cls-btn::before,.name-btn .no::before{animation-play-state:paused}
+.mcard:hover .mborder::before,.cls-btn:hover::before,.cls-btn.on::before,.name-btn:hover .no::before{animation-play-state:running}
+.exam-card::after{width:150%;height:400%;left:-25%;top:-150%;margin:0;animation-duration:9s}
+/* 7) buttons: static gradient; light sweep only on hover */
+.btn{animation:none;background-size:100% 100%!important}
+.btn::after{animation:none;left:-60%}
+.btn:hover::after{animation:sweep 1s ease-out 1}
+#examBtn{animation:none;box-shadow:0 0 0 6px rgba(255,209,102,.15),0 10px 40px -6px rgba(255,209,102,.85)}
+/* 8) shimmering headings: static gradient (background-position animation repaints every frame) */
+.grad-text,.topic-head h2::after{animation:none}
+/* 9) floating 3D shapes: borders only (glow shadows on rotating faces were costly) */
+.cube i,.torus i{box-shadow:none;background:none}
+/* 10) question card: slower, smaller rotating border */
+.qcard::before{width:180%;height:400%;margin:0;left:-40%;top:-150%;animation-duration:14s}
+.mcard .holo{mix-blend-mode:normal}
+.mcard:hover .holo{opacity:.45}
+/* full-mode login page: keep the colour fields but stop moving the huge layers */
+.blobs i{animation:none}
+.hero .aurora{animation:none;inset:-10%}
+#scr-hub .glyphs{display:none}
+
 /* ================= "LITE" mode: tablets/phones — keeps the look, drops continuous GPU-heavy work ================= */
 body.lite{background:radial-gradient(ellipse at 15% -5%,rgba(124,92,255,.45),transparent 45%),radial-gradient(ellipse at 95% 25%,rgba(255,79,216,.32),transparent 45%),radial-gradient(ellipse at 40% 110%,rgba(34,211,238,.28),transparent 50%),var(--bg);background-attachment:fixed}
 body.lite .blobs,body.lite #floaters,body.lite .aurora,body.lite .beams,body.lite .glyphs,body.lite .orbit,body.lite .clock-halo,body.lite .qcard .scanline,body.lite .gold-dust,body.lite .exam-card .sweep,body.lite #cursorGlow{display:none!important}
@@ -654,7 +696,7 @@ body.lite .marquee span{padding-left:0;white-space:normal;display:block;text-ali
 body.lite .mcard .mborder::before{opacity:.75}
 body.lite .cls-btn::before{opacity:.8}
 body.lite .btn::after{display:none}
-body.lite h1.title .ch{animation:none!important;background-position:calc(var(--i)*40%) 0;filter:drop-shadow(0 3px 0 rgba(124,92,255,.85)) drop-shadow(0 0 14px rgba(255,79,216,.4))}
+body.lite h1.title .ch{animation:none!important;background-position:calc(var(--i)*40%) 0;filter:none}
 body.lite .modal,body.lite .warn-modal .modal{animation:mIn .35s cubic-bezier(.2,.9,.3,1.2)!important}
 body.lite .mcard:hover .holo{opacity:0}
 body.lite .bigring{filter:none}
@@ -1088,20 +1130,21 @@ document.addEventListener('pointerdown', function(e){
 
 /* ---------------- background particles ---------------- */
 var FX = (function(){
-  var vt = 0, lastF = 0, litePrev = null, cv = $('#fx'), g = cv.getContext('2d'), W, H, cx, cy, stars = [], speed = 1.2, target = 1.2, warpT = 0, run = true, dpr = 1, mx = 0, my = 0, pmx = 0, pmy = 0;
+  var vt = 0, lastF = 0, drewStatic = false, litePrev = null, cv = $('#fx'), g = cv.getContext('2d'), W, H, cx, cy, stars = [], speed = 1.2, target = 1.2, warpT = 0, run = true, dpr = 1, mx = 0, my = 0, pmx = 0, pmy = 0;
   var HUES = [290, 260, 190, 45, 320];
   function mk(far){ return {x:(Math.random() - .5) * W * 2, y:(Math.random() - .5) * H * 2, z:far ? W : Math.random() * W, pz:0, h:HUES[Math.floor(Math.random() * HUES.length)]}; }
-  function init(){ var lite = document.body.classList.contains('lite'); litePrev = lite; dpr = lite ? 1 : Math.min(window.devicePixelRatio || 1, 1.5); W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; cx = W / 2; cy = H / 2; stars = [];
-    var n = lite ? Math.min(90, Math.floor(innerWidth * innerHeight / 14000)) : Math.min(260, Math.floor(innerWidth * innerHeight / 6000)); for (var i = 0; i < n; i++){ var s = mk(false); s.pz = s.z; stars.push(s); } }
+  function init(){ var lite = document.body.classList.contains('lite'); litePrev = lite; drewStatic = false; dpr = 1; W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr; cx = W / 2; cy = H / 2; stars = [];
+    var n = lite ? Math.min(90, Math.floor(innerWidth * innerHeight / 14000)) : Math.min(160, Math.floor(innerWidth * innerHeight / 9000)); for (var i = 0; i < n; i++){ var s = mk(false); s.pz = s.z; stars.push(s); } }
   function frame(){
     requestAnimationFrame(frame);
     if (!run || document.body.classList.contains('lowfx')) return;
     var lite = document.body.classList.contains('lite');
     if (lite !== litePrev) init();
     if (warpT && Date.now() > warpT){ target = 1.2; warpT = 0; }
+    var nowT = performance.now(); if (nowT - lastF < 33) return; lastF = nowT;
     if (lite){
-      var nowT = performance.now(); if (nowT - lastF < 33) return; lastF = nowT;
-      if (!warpT && speed < 1.4 && (_curScr === 'scr-play' || _curScr === 'scr-result')) return;
+      if (!warpT && speed < 1.4 && drewStatic) return; // lite: stars drawn once, they only move during warp transitions
+      drewStatic = !warpT && speed < 1.4;
     }
     speed += (target - speed) * .06; pmx += (mx - pmx) * .05; pmy += (my - pmy) * .05;
     g.fillStyle = speed > 6 ? 'rgba(7,6,26,.35)' : 'rgba(7,6,26,1)'; g.fillRect(0, 0, W, H);
@@ -1133,9 +1176,10 @@ function setLowFx(v){ setFxMode(v ? 'low' : (IS_TOUCH ? 'lite' : 'full'), true);
 function cycleFx(){ var m = FX_MODES[(FX_MODES.indexOf(fxMode()) + 1) % 3]; setFxMode(m, true); toast('เอฟเฟกต์: ' + FX_LABEL[m] + (m === 'full' && IS_TOUCH ? ' (อาจทำให้เครื่องร้อน)' : '')); }
 (function(){
   var m = lsGet('ptq_fxmode', null), legacy = lsGet('ptq_lowfx', null);
-  if (m && FX_MODES.indexOf(m) >= 0){ setFxMode(m); return; }
+  if (m && FX_MODES.indexOf(m) >= 0 && m !== 'full'){ setFxMode(m); return; }
+  if (m === 'full'){ setFxMode('full'); }
   if (legacy === true){ setFxMode('low'); return; } // old builds stored 'false' on every device automatically, so only honour an explicit economy choice
-  setFxMode(IS_TOUCH ? 'lite' : 'full');
+  if (m !== 'full') setFxMode(IS_TOUCH ? 'lite' : 'full');
   var frames = 0, t0 = 0;
   function tick(t){ if (!t0) t0 = t; frames++; if (t - t0 < 4000){ requestAnimationFrame(tick); return; }
     var fps = frames * 1000 / (t - t0); if (document.hidden) return;
